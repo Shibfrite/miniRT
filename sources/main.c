@@ -2,9 +2,12 @@
 
 int main(void)
 {
+	t_window *window;
 	//parse input
-	//launch window
+	window = create_window();
 	//start simulation
+	render_image(window);
+	mlx_loop(window->mlx_ptr);
 	printf("test");
-	return (SUCCESS);
+	close_program(window);
 }

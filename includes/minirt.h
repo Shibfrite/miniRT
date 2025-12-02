@@ -11,6 +11,9 @@
 #include <sys/time.h>
 #include "libft.h"
 #include "mlx.h"
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include "vec3.h"
 
 //Defines
 //Return values
@@ -22,20 +25,34 @@
 #define WIN_NAME "miniRT"
 
 //Structures
-typedef struct s_window_ctrl
+typedef struct s_window
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
-}	t_window_ctrl;
+}	t_window;
+
+typedef t_vec3 t_point3;
+
+typedef struct s_object
+{
+	t_point3		position;
+	unsigned int	color[3];
+	unsigned int	diameter;
+	unsigned int	height;
+	int	value;
+} t_object;
 
 //Files and functions
 //main.c
 int	main(void);
 
 //libx.c
-t_window_ctrl	*manage_mlx(char **av);
-void			close_program(t_window_ctrl *win_var);
+t_window	*create_window(void);
+int			close_program(void *param);
 
 //input.c
-int mouse_hook(int button, int x, int y, t_window_ctrl *min_max);
-int key_hook(int keycode, t_window_ctrl *min_max);
+int		mouse_hook(int button, int x, int y, t_window *min_max);
+int		key_hook(int keycode, t_window *min_max);
+
+//put_image.c
+void	render_image(t_window *window);

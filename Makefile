@@ -6,7 +6,7 @@
 #    By: makurek <makurek@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 22:14:00 by makurek           #+#    #+#              #
-#    Updated: 2025/11/20 17:38:44 by makurek        ########   odam.nl         #
+#    Updated: 2025/12/01 12:25:00 by makurek        ########   odam.nl         #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,12 +22,13 @@ SRC_DIR		:= sources
 OBJ_DIR		:= objects
 INC_DIR		:= includes
 
-SRC_FILES	:=  main.c
+SRC_FILES	:= main.c input.c libx.c  put_image.c
 SRC_PREFIX	:= $(SRC_DIR)/
 SRC			:= $(addprefix $(SRC_PREFIX),$(SRC_FILES))
 OBJ 		:= $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 INC			:= -I$(INC_DIR) -Iminilibx-linux -I$(LIBFT_DIR)/$(INC_DIR)
 MLX			:= -Lminilibx-linux -lmlx -lXext -lX11 -lm
+
 LIBFT		:= $(LIBFT_DIR)/libft.a
 
 DIRS		:= $(INC_DIR) $(SRC_DIR) $(OBJ_DIR) $(LIBFT_DIR)
@@ -42,7 +43,7 @@ CMLX:
 	echo "MLX compiled successfully."
 
 $(NAME): $(OBJ) $(LIBFT) CMLX
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $@
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(MLX) -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIRS)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
