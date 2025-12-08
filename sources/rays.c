@@ -1,41 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                         ::::::::           */
-/*   input.c                                             :+:    :+:           */
+/*   rays.c                                              :+:    :+:           */
 /*                                                      +:+                   */
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
-/*   Created: 2025/12/08 18:08:22 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/08 18:08:23 by makurek        ########   odam.nl        */
+/*   Created: 2025/12/08 18:07:29 by makurek        #+#    #+#                */
+/*   Updated: 2025/12/08 18:07:47 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-/*
-static void	zoom()
-{
-}
-*/
 
-int	mouse_hook(int button, int x, int y, t_window *window)
+t_ray	ray_init(t_point3 origin, t_vec3 direction)
 {
-	(void)button;
-	(void)x;
-	(void)y;
-	(void)window;
-/*	if (button == 4)
-		zoom();
-	else if (button == 5)
-		zoom();
-	else
-		return (SUCCESS);
-*/	//render
-	return (SUCCESS);
+	t_ray	ray;
+
+	ray.origin = origin;
+	ray.direction = direction;
+	return (ray);
 }
 
-int	key_hook(int keycode, t_window *window)
+t_point3	at(t_ray ray, double t)
 {
-	if (keycode == 65307)
-		close_program(window);
-	return (SUCCESS);
+	t_vec3	res;
+
+	res = vec3_scale(ray.direction, t);
+	return (vec3_add(res, ray.origin));
 }

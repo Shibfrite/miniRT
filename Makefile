@@ -6,7 +6,7 @@
 #    By: makurek <makurek@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 22:14:00 by makurek           #+#    #+#              #
-#    Updated: 2025/12/01 12:25:00 by makurek        ########   odam.nl         #
+#    Updated: 2025/12/04 15:30:54 by makurek        ########   odam.nl         #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRC_DIR		:= sources
 OBJ_DIR		:= objects
 INC_DIR		:= includes
 
-SRC_FILES	:= main.c input.c libx.c  put_image.c
+SRC_FILES	:= main.c input.c libx.c  put_image.c rays.c vec3.c
 SRC_PREFIX	:= $(SRC_DIR)/
 SRC			:= $(addprefix $(SRC_PREFIX),$(SRC_FILES))
 OBJ 		:= $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
