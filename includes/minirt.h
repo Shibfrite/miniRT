@@ -110,3 +110,6 @@ void		render_image(t_window *window, t_camera camera);
 //rays.c
 t_ray		ray_init(t_point3 origin, t_vec3 direction);
 t_point3	at(t_ray ray, double t);
+
+//colors.c
+int compute_pixel_color(int x, int y, t_camera camera);
