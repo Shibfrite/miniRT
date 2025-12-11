@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/11 13:09:57 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/11 14:36:28 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 
 	We then replace P by P(t) and develop given that P(t) = Q + td:
 		(C−Q+td)⋅(C−Q+td)=r^2
+	This makes t the new value we have to solve for.
 
 	We factorise C-Q:
 		t^2d⋅d − ^2td ⋅ (C−Q)+(C−Q) ⋅ (C−Q)=r^2
@@ -45,21 +46,28 @@
 	if zero 1 point.
 	if negative 0 points.
 		discriminant = b^2 - 4ac
-*/
-static int	hit_sphere(const t_point3 center, double radius, const t_ray r)
-{
-		t_vec3	oc;
-		double	a;
-		double	b;
-		double	c;
-		double	discriminant;
 
-		oc = vec3_sub(center, r.origin);
-		a = vec3_dot(r.direction, r.direction);
-		b = -2.0 * vec3_dot(r.direction, oc);
-		c = vec3_dot(oc, oc) - radius * radius;
-		discriminant = b * b - 4 * a * c;
-		return (discriminant >= 0);
+	Somehow if we solve the quadratic it give us
+	the exact point at which the ray intersects the sphere.
+	This confuses me.
+*/
+static double	hit_sphere(const t_point3 center, double radius, const t_ray r)
+{
+	t_vec3	oc;
+	double	a;
+	double	b;
+	double	c;
+	double	discriminant;
+
+	oc = vec3_sub(center, r.origin);
+	a = vec3_dot(r.direction, r.direction);
+	b = -2.0 * vec3_dot(r.direction, oc);
+	c = vec3_dot(oc, oc) - radius * radius;
+	discriminant = b * b - 4 * a * c;
+    if (discriminant < 0)
+        return -1.0;
+    else
+        return (-b - sqrt(discriminant)) / (2.0*a);
 }
 
 /*
@@ -80,8 +88,11 @@ static t_color3	ray_color(const t_ray r)
 	t_vec3	term1;
 	t_vec3	term2;
 
-	if (hit_sphere(vec3_init(0, 0, -1), 0.5, r))
-		return (vec3_init(1, 0, 0));
+    double t = hit_sphere(vec3_init(0,0,-1), 0.5, r);
+    if (t > 0.0) {
+        t_vec3 N = vec3_unit(vec3_sub(at(r,t), vec3_init(0,0,-1)));
+        return (t_color3){0.5*(N.e[0]+1), 0.5*(N.e[1]+1), 0.5*(N.e[2]+1)};
+    }
 	unit_direction = vec3_unit(r.direction);
 	a = 0.5 * (unit_direction.e[1] + 1.0);
 	white = vec3_init(1.0, 1.0, 1.0);
@@ -116,7 +127,7 @@ int	compute_pixel_color(int x, int y, t_camera camera)
 	res = vec3_add(res, res1);
 	pixel_center = vec3_add(res, camera.first_pixel_location);
 	ray_direction = vec3_sub(pixel_center, camera.camera_center);
-	ray = ray_init(pixel_center, ray_direction);
+	ray = ray_init(camera.camera_center, ray_direction);
 	color = ray_color(ray);
 	return (((unsigned)(255.999 * color.e[0]) << 16) |
 		((unsigned)(255.999 * color.e[1]) << 8) |
