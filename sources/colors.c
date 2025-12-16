@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/11 14:36:28 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/16 13:35:06 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,27 @@
 	Somehow if we solve the quadratic it give us
 	the exact point at which the ray intersects the sphere.
 	This confuses me.
+
+	Note:
+		We can simplify using -2h instead of b.
 */
 static double	hit_sphere(const t_point3 center, double radius, const t_ray r)
 {
 	t_vec3	oc;
 	double	a;
-	double	b;
+	double	h;
 	double	c;
 	double	discriminant;
 
 	oc = vec3_sub(center, r.origin);
 	a = vec3_dot(r.direction, r.direction);
-	b = -2.0 * vec3_dot(r.direction, oc);
-	c = vec3_dot(oc, oc) - radius * radius;
-	discriminant = b * b - 4 * a * c;
+	h = vec3_dot(r.direction, oc);
+	c = vec3_length_squared(oc) - radius * radius;
+	discriminant = h * h - a * c;
     if (discriminant < 0)
-        return -1.0;
+        return (-1.0);
     else
-        return (-b - sqrt(discriminant)) / (2.0*a);
+        return ((h - sqrt(discriminant)) / a);
 }
 
 /*

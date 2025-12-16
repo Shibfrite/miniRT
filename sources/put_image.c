@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 17:58:26 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/11 13:08:59 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/11 15:24:41 by makurek        ########   odam.nl        */
 /*																			*/
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ static void	render_pixels(void *img, t_camera camera)
 /*
 	we create an image, fill it and show it.
 */
-void	render_image(t_window *window, t_camera camera)
+void	*render_image(t_window *window, t_camera camera)
 {
 	void	*img;
 
@@ -123,4 +123,5 @@ void	render_image(t_window *window, t_camera camera)
 		close_program(window);
 	render_pixels(img, camera);
 	mlx_put_image_to_window(window->mlx_ptr, window->win_ptr, img, 0, 0);
+	return (img);
 }

@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 18:33:11 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/08 18:33:12 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/16 13:03:33 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,5 @@ t_vec3	vec3_cross(const t_vec3 u, const t_vec3 v);
 
 /* length and normalization */
 double	vec3_length(const t_vec3 v);
+double	vec3_length_squared(const t_vec3 v);
 t_vec3	vec3_unit(const t_vec3 v);

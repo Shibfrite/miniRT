@@ -103,10 +103,16 @@ t_vec3	vec3_cross(const t_vec3 u, const t_vec3 v)
 		u.e[0] * v.e[1] - u.e[1] * v.e[0]});
 }
 
+/* length squared */
+double	vec3_length_squared(const t_vec3 v)
+{
+	return (v.e[0] * v.e[0] + v.e[1] * v.e[1] + v.e[2] * v.e[2]);
+}
+
 /* length */
 double	vec3_length(const t_vec3 v)
 {
-	return (sqrt(v.e[0] * v.e[0] + v.e[1] * v.e[1] + v.e[2] * v.e[2]));
+	return (sqrt(vec3_length_squared(v)));
 }
 
 /* unit vector */

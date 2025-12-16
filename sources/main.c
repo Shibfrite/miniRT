@@ -18,6 +18,7 @@ int	main(void)
 	unsigned int	window_width;
 	unsigned int	window_height;
 	float			aspect_ratio;
+	void			*image;
 
 	window_width = WIN_WIDTH;
 	aspect_ratio = WIN_ASPECT_RATIO;
@@ -26,7 +27,8 @@ int	main(void)
 	camera = create_camera(window_width, window_height);
 
 	//start simulation
-	render_image(window, camera);
+	image = render_image(window, camera);
 	mlx_loop(window->mlx_ptr);
+	mlx_destroy_image(window, image);
 	close_program(window);
 }

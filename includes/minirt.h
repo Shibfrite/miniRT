@@ -105,7 +105,7 @@ int			key_hook(int keycode, t_window *min_max);
 
 //put_image.c
 t_camera	create_camera(unsigned int image_width, unsigned int image_height);
-void		render_image(t_window *window, t_camera camera);
+void		*render_image(t_window *window, t_camera camera);
 
 //rays.c
 t_ray		ray_init(t_point3 origin, t_vec3 direction);
