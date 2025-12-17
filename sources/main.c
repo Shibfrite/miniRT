@@ -19,6 +19,8 @@ int	main(void)
 	unsigned int	window_height;
 	float			aspect_ratio;
 	void			*image;
+	//object array (spheres, planes and cylinders)
+	t_hittable		objects[3];
 
 	window_width = WIN_WIDTH;
 	aspect_ratio = WIN_ASPECT_RATIO;
@@ -27,8 +29,11 @@ int	main(void)
 	camera = create_camera(window_width, window_height);
 
 	//start simulation
-	image = render_image(window, camera);
+	objects[1] = create_sphere(vec3_init(0, 0, -1), 0.5);
+	objects[0] = create_sphere(vec3_init(0, -100.5, -1), 100);
+	ft_bzero(&objects[2], sizeof(objects[2]));
+	image = render_image(window, camera, objects);
 	mlx_loop(window->mlx_ptr);
 	mlx_destroy_image(window, image);
-	close_program(window);
+	return (close_program(window));
 }

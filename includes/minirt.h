@@ -34,6 +34,9 @@
 //vec3 functions
 #include "vec3.h"
 
+//bool values
+#include "stdbool.h"
+
 //-------------Defines-------------
 //Return values
 #define SUCCESS 0
@@ -81,6 +84,52 @@ typedef struct s_camera
 	t_point3		first_pixel_location;
 }	t_camera;
 
+//data of rays hitting a surface
+typedef struct s_hit_record
+{
+	t_point3	p;
+	t_vec3		normal;
+	double		t;
+}	t_hit_record;
+
+//Currently used structs to store object data
+//Note:
+//It might be cleaner to have an abstraction for object
+//But premature abstraction is bad
+
+//identification
+typedef enum s_object_type
+{
+	OBJ_NULL,
+	OBJ_SPHERE,
+	OBJ_PLANE
+}	t_object_type;
+
+typedef struct s_sphere
+{
+	t_point3	center;
+	double		radius;
+}	t_sphere;
+
+typedef union s_object
+{
+	t_sphere sphere;
+}	t_object;
+
+typedef struct s_hittable
+{
+    t_object_type	type; //is the type necessary?
+	t_object		shape;
+	bool			(*hit)(const t_point3, double, const t_ray, double, double, t_hit_record*);
+}	t_hittable;
+
+typedef struct s_hittable_list
+{
+	t_hittable	*hittable;
+	size_t		n_obj;
+}	t_hittable_list;
+
+/*
 //Hypothetical struct for any object
 typedef struct s_object
 {
@@ -90,7 +139,7 @@ typedef struct s_object
 	unsigned int	height;
 	int				value;
 }	t_object;
-
+*/
 //-------------Files and functions-------------
 //main.c
 int			main(void);
@@ -105,11 +154,20 @@ int			key_hook(int keycode, t_window *min_max);
 
 //put_image.c
 t_camera	create_camera(unsigned int image_width, unsigned int image_height);
-void		*render_image(t_window *window, t_camera camera);
+void		*render_image(t_window *window, t_camera camera, t_hittable *objects);
 
 //rays.c
 t_ray		ray_init(t_point3 origin, t_vec3 direction);
 t_point3	at(t_ray ray, double t);
 
 //colors.c
-int compute_pixel_color(int x, int y, t_camera camera);
+int			compute_pixel_color(int x, int y, t_camera camera, t_hittable *objects);
+
+//sphere.c
+bool		hit_sphere(const t_point3 center, double radius,
+                       const t_ray r, double tmin, double tmax,
+                       t_hit_record *rec);
+t_hittable	create_sphere(t_point3 center, double radius);
+
+//object.c
+bool		hit(t_hittable *object, const t_ray r, double tmin, double tmax, t_hit_record *rec);

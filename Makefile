@@ -22,7 +22,7 @@ SRC_DIR		:= sources
 OBJ_DIR		:= objects
 INC_DIR		:= includes
 
-SRC_FILES	:= main.c input.c libx.c  put_image.c rays.c vec3.c colors.c
+SRC_FILES	:= main.c input.c libx.c  put_image.c rays.c vec3.c colors.c sphere.c objects.c
 SRC_PREFIX	:= $(SRC_DIR)/
 SRC			:= $(addprefix $(SRC_PREFIX),$(SRC_FILES))
 OBJ 		:= $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

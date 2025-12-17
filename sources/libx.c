@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 18:08:46 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/16 13:52:58 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/17 18:27:52 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,5 @@ int	close_program(void *param)
 		free(window->mlx_ptr);
 	}
 	free(window);
-	exit(SUCCESS);
+	return (SUCCESS);
 }

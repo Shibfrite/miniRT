@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 17:58:26 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/11 15:24:41 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/17 18:01:11 by makurek        ########   odam.nl        */
 /*																			*/
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 /*
 	we pass on each pixel and compute it's color.
 */
-static void	render_pixels(void *img, t_camera camera)
+static void	render_pixels(void *img, t_camera camera, t_hittable *objects)
 {
 	unsigned int	*pixels;
 	unsigned int	x;
@@ -103,7 +103,7 @@ static void	render_pixels(void *img, t_camera camera)
 		while (x < camera.image_dimension[WIDTH])
 		{
 			pixels[y * camera.image_dimension[WIDTH] + x]
-				= compute_pixel_color(x, y, camera);
+				= compute_pixel_color(x, y, camera, objects);
 			x++;
 		}
 		y++;
@@ -113,7 +113,7 @@ static void	render_pixels(void *img, t_camera camera)
 /*
 	we create an image, fill it and show it.
 */
-void	*render_image(t_window *window, t_camera camera)
+void	*render_image(t_window *window, t_camera camera, t_hittable *objects)
 {
 	void	*img;
 
@@ -121,7 +121,7 @@ void	*render_image(t_window *window, t_camera camera)
 			camera.image_dimension[HEIGHT]);
 	if (!img)
 		close_program(window);
-	render_pixels(img, camera);
+	render_pixels(img, camera, objects);
 	mlx_put_image_to_window(window->mlx_ptr, window->win_ptr, img, 0, 0);
 	return (img);
 }
