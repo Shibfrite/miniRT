@@ -28,8 +28,33 @@
 
 //mlx functons
 #include "mlx.h"
-#include <X11/X.h>
-#include <X11/Xlib.h>
+
+// Keycodes et includes spécifiques à l'OS
+#ifdef __APPLE__
+    // macOS - pas besoin de X11
+    #define KEY_ESC 53
+    #define KEY_W 13
+    #define KEY_A 0
+    #define KEY_S 1
+    #define KEY_D 2
+    #define KEY_UP 126
+    #define KEY_DOWN 125
+    #define KEY_LEFT 123
+    #define KEY_RIGHT 124
+#else
+    // Linux - X11 requis
+    #include <X11/X.h>
+    #include <X11/keysym.h>
+    #define KEY_ESC 65307
+    #define KEY_W 119
+    #define KEY_A 97
+    #define KEY_S 115
+    #define KEY_D 100
+    #define KEY_UP 65362
+    #define KEY_DOWN 65364
+    #define KEY_LEFT 65361
+    #define KEY_RIGHT 65363
+#endif
 
 //vec3 functions
 #include "vec3.h"
@@ -59,7 +84,7 @@ typedef struct s_window
 	void			*win_ptr;
 }	t_window;
 
-//those are equivalent, an array of 3 int.
+//those are equivalent, an array of 3 double.
 typedef t_vec3	t_point3;
 typedef t_vec3	t_color3;
 
@@ -70,26 +95,91 @@ typedef struct s_ray
 	t_vec3		direction;
 }	t_ray;
 
-//camera
+//-------------Scene elements (from .rt file)-------------
+
+// Ambient light: A 0.2 255,255,255
+typedef struct s_ambient
+{
+	double		ratio;		// [0.0, 1.0]
+	t_color3	color;		// RGB [0-255]
+	int			is_set;		// unique, must be set once
+}	t_ambient;
+
+// Camera: C -50,0,20 0,0,1 70
 typedef struct s_camera
 {
+	t_point3	pos;		// position
+	t_vec3		dir;		// normalized orientation [-1,1]
+	double		fov;		// field of view [0-180]
+	int			is_set;		// unique, must be set once
+	// Computed values for rendering
 	unsigned int	image_dimension[2];
 	t_vec3			viewport_dimension[2];
 	t_vec3			pixel_length[2];
-	t_point3		camera_center;
-	float			aspect_ratio;
 	t_point3		first_pixel_location;
+	float			aspect_ratio;
 }	t_camera;
 
-//Hypothetical struct for any object
+// Light: L -40,50,0 0.6 255,255,255
+typedef struct s_light
+{
+	t_point3	pos;
+	double		brightness;	// [0.0, 1.0]
+	t_color3	color;		// RGB (bonus, default white)
+}	t_light;
+
+// Sphere: sp 0,0,20 20 255,0,0
+typedef struct s_sphere
+{
+	t_point3	center;
+	double		diameter;
+	t_color3	color;
+}	t_sphere;
+
+// Plane: pl 0,0,-10 0,1,0 0,0,225
+typedef struct s_plane
+{
+	t_point3	point;
+	t_vec3		normal;		// normalized [-1,1]
+	t_color3	color;
+}	t_plane;
+
+// Cylinder: cy 50,0,20.6 0,0,1 14.2 21.42 10,0,255
+typedef struct s_cylinder
+{
+	t_point3	center;
+	t_vec3		axis;		// normalized [-1,1]
+	double		diameter;
+	double		height;
+	t_color3	color;
+}	t_cylinder;
+
+// Object type enum
+typedef enum e_obj_type
+{
+	OBJ_SPHERE,
+	OBJ_PLANE,
+	OBJ_CYLINDER
+}	t_obj_type;
+
+// Generic object (linked list node)
 typedef struct s_object
 {
-	t_point3		position;
-	t_color3		color;
-	unsigned int	diameter;
-	unsigned int	height;
-	int				value;
+	t_obj_type		type;
+	void			*data;		// ptr to sphere/plane/cylinder
+	struct s_object	*next;
 }	t_object;
+
+// Main scene container
+typedef struct s_scene
+{
+	t_ambient	ambient;
+	t_camera	camera;
+	t_light		*lights;		// array
+	int			light_count;
+	t_object	*objects;		// linked list
+	int			obj_count;
+}	t_scene;
 
 //-------------Files and functions-------------
 //main.c

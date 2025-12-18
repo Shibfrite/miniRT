@@ -70,7 +70,7 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 
 	camera.image_dimension[WIDTH] = image_width;
 	camera.image_dimension[HEIGHT] = image_height;
-	camera.camera_center = vec3_zero();
+	camera.pos = vec3_zero();
 	viewport_height = 2.0;
 	viewport_width = viewport_height
 		* ((double)camera.image_dimension[WIDTH]
@@ -81,7 +81,7 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 			camera.image_dimension[WIDTH]);
 	camera.pixel_length[HEIGHT] = vec3_div(camera.viewport_dimension[HEIGHT],
 			camera.image_dimension[HEIGHT]);
-	camera.first_pixel_location = locate_first_pixel(camera.camera_center,
+	camera.first_pixel_location = locate_first_pixel(camera.pos,
 			camera.viewport_dimension, camera.pixel_length);
 	return (camera);
 }

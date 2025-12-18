@@ -126,8 +126,8 @@ int	compute_pixel_color(int x, int y, t_camera camera)
 	res1 = vec3_scale(camera.pixel_length[HEIGHT], y);
 	res = vec3_add(res, res1);
 	pixel_center = vec3_add(res, camera.first_pixel_location);
-	ray_direction = vec3_sub(pixel_center, camera.camera_center);
-	ray = ray_init(camera.camera_center, ray_direction);
+	ray_direction = vec3_sub(pixel_center, camera.pos);
+	ray = ray_init(camera.pos, ray_direction);
 	color = ray_color(ray);
 	return (((unsigned)(255.999 * color.e[0]) << 16) |
 		((unsigned)(255.999 * color.e[1]) << 8) |
