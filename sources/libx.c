@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 18:08:46 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/17 18:27:52 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/18 12:35:33 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,15 @@ int	close_program(void *param)
 	t_window	*window;
 
 	window = (t_window *)param;
+	if (!window)
+		return (FAILURE);
+	if (window->image)
+		mlx_destroy_image(window->mlx_ptr, window->image);
 	if (window->win_ptr)
+	{
+		mlx_clear_window(window->mlx_ptr, window->win_ptr);
 		mlx_destroy_window(window->mlx_ptr, window->win_ptr);
+	}
 	if (window->mlx_ptr)
 	{
 		mlx_destroy_display(window->mlx_ptr);

@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 18:08:22 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/08 18:08:23 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/18 12:16:52 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ int	mouse_hook(int button, int x, int y, t_window *window)
 int	key_hook(int keycode, t_window *window)
 {
 	if (keycode == 65307)
-		close_program(window);
+		mlx_loop_end(window->mlx_ptr);
 	return (SUCCESS);
 }

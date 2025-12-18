@@ -60,6 +60,7 @@ typedef struct s_window
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
+	void			*image;
 }	t_window;
 
 //those are equivalent, an array of 3 int.

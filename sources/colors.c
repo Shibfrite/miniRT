@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/17 18:07:23 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/18 13:22:57 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ static t_color3	ray_color(const t_ray r, t_hittable *objects)
 {
 	t_vec3			unit_direction;
 	double			a;
-	t_vec3			white;
-	t_vec3			blue;
 	t_vec3			term1;
 	t_vec3			term2;
 	t_hit_record	hit_record;
@@ -38,10 +36,8 @@ static t_color3	ray_color(const t_ray r, t_hittable *objects)
 	}
 	unit_direction = vec3_unit(r.direction);
 	a = 0.5 * (unit_direction.e[1] + 1.0);
-	white = vec3_init(1.0, 1.0, 1.0);
-	blue = vec3_init(0.5, 0.7, 1.0);
-	term1 = vec3_scale(white, 1.0 - a);
-	term2 = vec3_scale(blue, a);
+	term1 = vec3_scale(vec3_init(1.0, 1.0, 1.0), 1.0 - a);
+	term2 = vec3_scale(vec3_init(0.5, 0.7, 1.0), a);
 	return (vec3_add(term1, term2));
 }
 
@@ -60,14 +56,12 @@ int	compute_pixel_color(int x, int y, t_camera camera, t_hittable *objects)
 {
 	t_point3	pixel_center;
 	t_vec3		ray_direction;
-	t_vec3		res;
-	t_vec3		res1;
 	t_color3	color;
 	t_ray		ray;
+	t_vec3		res;
 
-	res = vec3_scale(camera.pixel_length[WIDTH], x);
-	res1 = vec3_scale(camera.pixel_length[HEIGHT], y);
-	res = vec3_add(res, res1);
+	res = vec3_add(vec3_scale(camera.pixel_length[WIDTH], x),
+			vec3_scale(camera.pixel_length[HEIGHT], y));
 	pixel_center = vec3_add(res, camera.first_pixel_location);
 	ray_direction = vec3_sub(pixel_center, camera.camera_center);
 	ray = ray_init(camera.camera_center, ray_direction);
