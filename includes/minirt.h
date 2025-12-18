@@ -117,11 +117,13 @@ typedef union s_object
 	t_sphere sphere;
 }	t_object;
 
+typedef struct s_interval t_interval;
+
 typedef struct s_hittable
 {
     t_object_type	type; //is the type necessary?
 	t_object		shape;
-	bool			(*hit)(const t_point3, double, const t_ray, double, double, t_hit_record*);
+	bool			(*hit)(const t_point3, double, const t_ray, t_interval, t_hit_record*);
 }	t_hittable;
 
 typedef struct s_hittable_list
@@ -141,6 +143,42 @@ typedef struct s_object
 	int				value;
 }	t_object;
 */
+
+/*
+ * interval class in cpp for reference
+ * every function will be done manually as they are quite simple
+class interval {
+  public:
+    double min, max;
+
+    interval() : min(+infinity), max(-infinity) {} // Default interval is empty
+
+    interval(double min, double max) : min(min), max(max) {}
+
+    double size() const {
+        return max - min;
+    }
+
+    bool contains(double x) const {
+        return min <= x && x <= max;
+    }
+
+    bool surrounds(double x) const {
+        return min < x && x < max;
+    }
+
+    static const interval empty, universe;
+};
+
+const interval interval::empty    = interval(+infinity, -infinity);
+const interval interval::universe = interval(-infinity, +infinity);
+*/
+typedef struct s_interval
+{
+	double	min;
+	double	max;
+} t_interval;	
+
 //-------------Files and functions-------------
 //main.c
 int			main(void);
@@ -166,9 +204,15 @@ int			compute_pixel_color(int x, int y, t_camera camera, t_hittable *objects);
 
 //sphere.c
 bool		hit_sphere(const t_point3 center, double radius,
-                       const t_ray r, double tmin, double tmax,
+                       const t_ray r, t_interval ray_t,
                        t_hit_record *rec);
 t_hittable	create_sphere(t_point3 center, double radius);
 
 //object.c
-bool		hit(t_hittable *object, const t_ray r, double tmin, double tmax, t_hit_record *rec);
+bool		hit(t_hittable *object, const t_ray r, t_interval ray_t, t_hit_record *rec);
+
+//interval.c
+t_interval  interval_init(double min, double max);
+double	interval_size(t_interval t);
+bool	interval_contains(t_interval t, double x);
+bool	interval_surrounds(t_interval t, double x);

@@ -26,7 +26,7 @@
 	then we solve the equation and check if the point is within bounds.
 */
 bool	hit_sphere(const t_point3 center, double radius,
-						const t_ray r, double tmin, double tmax,
+						const t_ray r, t_interval ray_t,
 						t_hit_record *rec)
 {
 	t_vec3	oc;
@@ -46,10 +46,10 @@ bool	hit_sphere(const t_point3 center, double radius,
 		return (false);
 	sqrtd = sqrt(discriminant);
 	root = (h - sqrtd) / a;
-	if (root <= tmin || root >= tmax)
+	if (!interval_surrounds(ray_t, root))
 	{
 		root = (h + sqrtd) / a;
-		if (root <= tmin || root >= tmax)
+		if (!interval_surrounds(ray_t, root))
 			return (false);
 	}
 	rec->t = root;

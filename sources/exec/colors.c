@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/18 13:22:57 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/18 17:25:03 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ static t_color3	ray_color(const t_ray r, t_hittable *objects)
 	t_vec3			term2;
 	t_hit_record	hit_record;
 
-	if (hit(objects, r, 0, INFINITY, &hit_record))
+	if (hit(objects, r, interval_init(0, INFINITY), &hit_record))
 	{
-		t_vec3 N = hit_record.normal;
-		return (t_color3){0.5*(N.e[0]+1), 0.5*(N.e[1]+1), 0.5*(N.e[2]+1)};
+		t_vec3 n = hit_record.normal;
+		return (t_color3){0.5*(n.e[0]+1), 0.5*(n.e[1]+1), 0.5*(n.e[2]+1)};
 	}
 	unit_direction = vec3_unit(r.direction);
 	a = 0.5 * (unit_direction.e[1] + 1.0);
