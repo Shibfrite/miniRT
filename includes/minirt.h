@@ -213,6 +213,11 @@ bool		hit(t_hittable *object, const t_ray r, t_interval ray_t, t_hit_record *rec
 
 //interval.c
 t_interval  interval_init(double min, double max);
-double	interval_size(t_interval t);
-bool	interval_contains(t_interval t, double x);
-bool	interval_surrounds(t_interval t, double x);
+double		interval_size(t_interval t);
+bool		interval_contains(t_interval t, double x);
+bool		interval_surrounds(t_interval t, double x);
+
+//utils.c
+double		degrees_to_radians(double d);
+double		random_double(void);
+double		random_double_range(double min, double max);
