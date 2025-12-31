@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/31 17:09:14 by makurek        ########   odam.nl        */
+/*   Updated: 2025/12/31 17:34:05 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static t_color3	ray_color(const t_ray r, t_hittable *objects, int depth)
 		return ((t_color3)vec3_init(0, 0, 0));
 	if (hit(objects, r, interval_init(0.001, INFINITY), &hit_record))
 	{
+		//t_vec3 dir = random_on_hemisphere(hit_record.normal);
 		t_vec3 dir = vec3_add(hit_record.normal, random_unit_vector());
 		return (vec3_scale(ray_color(ray_init(hit_record.p, dir), objects, --depth), 0.5));
 	}
@@ -64,6 +65,10 @@ t_ray	get_ray(t_camera camera, int x, int y)
     return (ray_init(camera.camera_center, ray_direction));
 }
 
+static inline double linear_to_gamma(double linear_component) {
+    return (linear_component > 0.0) ? sqrt(linear_component) : 0.0;
+}
+
 /*
 	calculates the color of a single pixel.
 
@@ -75,30 +80,36 @@ t_ray	get_ray(t_camera camera, int x, int y)
 	We normalise it by using the scale 0-255 instead of 0-1.
 	We bitshift for the format requirement.
 */
-int	compute_pixel_color(int x, int y, t_camera camera, t_hittable *objects)
+int compute_pixel_color(int x, int y, t_camera camera, t_hittable *objects)
 {
-	unsigned	red;
-	unsigned	blue;
-	unsigned	green;
-	t_interval	intensity;
-	t_color3	color;
-	int			samples_per_pixel;
-	int			sample;
-	int			max_depth;
+    unsigned    red;
+    unsigned    green;
+    unsigned    blue;
+	double		r;
+	double		g;
+	double		b;
+    t_interval  intensity;
+    t_color3    color;
+    int         samples_per_pixel;
+    int         sample;
+    int         max_depth;
 
-	samples_per_pixel = 10;
-	max_depth = 10;
-	sample = 0;
-	color = (t_color3)vec3_init(0, 0, 0);
-	while (sample++ < samples_per_pixel)
-	{
-		t_ray	ray = get_ray(camera, x, y);
-		color = vec3_add(color, ray_color(ray, objects, max_depth));
-	}
-	vec3_div_inplace(&color, samples_per_pixel);
-	intensity = interval_init(0.000, 0.999);
-	red = 256 * interval_clamp(intensity, color.e[0]);
-	green = 256 * interval_clamp(intensity, color.e[1]);
-	blue = 256 * interval_clamp(intensity, color.e[2]);
-	return ((red << 16) | (green << 8) | blue);
+    samples_per_pixel = 10;
+    max_depth = 10;
+    sample = 0;
+    color = vec3_init(0, 0, 0);
+    while (sample++ < samples_per_pixel)
+    {
+        t_ray ray = get_ray(camera, x, y);
+        color = vec3_add(color, ray_color(ray, objects, max_depth));
+    }
+    vec3_div_inplace(&color, samples_per_pixel);
+    intensity = interval_init(0.000, 0.999);
+    r = interval_clamp(intensity, color.e[0]);
+    g = interval_clamp(intensity, color.e[1]);
+    b = interval_clamp(intensity, color.e[2]);
+    red   = 256 * linear_to_gamma(r);
+    green = 256 * linear_to_gamma(g);
+    blue  = 256 * linear_to_gamma(b);
+    return ((red << 16) | (green << 8) | blue);
 }
