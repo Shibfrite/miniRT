@@ -216,6 +216,7 @@ t_interval  interval_init(double min, double max);
 double		interval_size(t_interval t);
 bool		interval_contains(t_interval t, double x);
 bool		interval_surrounds(t_interval t, double x);
+double		interval_clamp(t_interval t, double x);
 
 //utils.c
 double		degrees_to_radians(double d);

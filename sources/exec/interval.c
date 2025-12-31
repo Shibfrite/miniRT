@@ -23,3 +23,12 @@ bool	interval_surrounds(t_interval t, double x)
 {
 	return (t.min < x && x < t.max);
 }
+
+double	interval_clamp(t_interval t, double x)
+{
+	if (x < t.min)
+		return (t.min);
+	if (x > t.max)
+		return (t.max);
+	return (x);
+}

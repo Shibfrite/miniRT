@@ -13,8 +13,9 @@ ignored chapters:
 	Irrelevant in C, apart from the modified hit function.
 6.4 Front Faces Versus Back Faces.
 	Irrelevant given our requirements.
-8	Antialiasing
-	Irrelevant given our requirements.
-	We'll still implement the random number generator.
 
 We aren't required to have different materials, hence every object will be matte.
+
+Temp note:
+After implementing anti-aliasing and matte matter my result is lighter
+Than what the guide shows. Still seems correct though.

@@ -11,6 +11,8 @@ unsigned int	compute_window_height(unsigned int window_width,
 	return (window_height);
 }
 
+// for now the nbr of objects is manually set.
+// it must be null terminated
 int	main(void)
 {
 	t_window		*window;
@@ -29,7 +31,7 @@ int	main(void)
 
 	objects[1] = create_sphere(vec3_init(0, 0, -1), 0.5);
 	objects[0] = create_sphere(vec3_init(0, -100.5, -1), 100);
-	ft_bzero(&objects[2], sizeof(objects[2])); //null terminat
+	ft_bzero(&objects[2], sizeof(objects[2]));
 	window->image = render_image(window, camera, objects);
 	mlx_loop(window->mlx_ptr);
 	return (close_program(window));
