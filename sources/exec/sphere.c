@@ -25,7 +25,7 @@
 		discriminant = b^2 - 4ac
 	then we solve the equation and check if the point is within bounds.
 */
-bool	hit_sphere(const t_point3 center, double radius,
+bool	hit_sphere(t_object shape,
 						const t_ray r, t_interval ray_t,
 						t_hit_record *rec)
 {
@@ -36,11 +36,13 @@ bool	hit_sphere(const t_point3 center, double radius,
 	double	sqrtd;
 	double	root;
 	double	discriminant;
+	t_sphere	sphere;
 
-	oc = vec3_sub(center, r.origin);
+	sphere = shape.sphere;
+	oc = vec3_sub(sphere.center, r.origin);
 	a = vec3_dot(r.direction, r.direction);
 	h = vec3_dot(r.direction, oc);
-	c = vec3_length_squared(oc) - radius * radius;
+	c = vec3_length_squared(oc) - sphere.radius * sphere.radius;
 	discriminant = h * h - a * c;
 	if (discriminant < 0)
 		return (false);
@@ -54,17 +56,19 @@ bool	hit_sphere(const t_point3 center, double radius,
 	}
 	rec->t = root;
 	rec->p = at(r, rec->t);
-	rec->normal = vec3_div(vec3_sub(rec->p, center), radius);
+	rec->normal = vec3_div(vec3_sub(rec->p, sphere.center), sphere.radius);
+	rec->color = sphere.color;
 	return (true);
 }
 
-t_hittable	create_sphere(t_point3 center, double radius)
+t_hittable	create_sphere(t_point3 center, t_color3 color, double radius)
 {
 	t_hittable	obj;
 	t_sphere	sphere;
 
 	sphere.center = center;
 	sphere.radius = radius;
+	sphere.color = color;
 	obj.type = OBJ_SPHERE;
 	obj.shape.sphere = sphere;
 	obj.hit = hit_sphere;

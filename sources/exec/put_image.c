@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 17:58:26 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/29 18:55:38 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/05 16:32:55 by makurek        ########   odam.nl        */
 /*																			*/
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static char	*get_image_data(void *img)
 					* (pixel_delta_u + pixel_delta_v);
 */
 static t_point3	locate_first_pixel(t_point3 camera_center,
+								t_vec3 focal_length,
 								t_vec3 viewport_dimension[2],
 									t_vec3 pixel_length[2])
 {
@@ -45,12 +46,10 @@ static t_point3	locate_first_pixel(t_point3 camera_center,
 	t_point3	viewport_height;
 	t_vec3		res;
 
-	res = vec3_init(0, 0, FOCAL_LENGTH);
-	res = vec3_sub(camera_center, res);
+	res = vec3_sub(camera_center, focal_length);
 	viewport_width = vec3_div(viewport_dimension[WIDTH], 2.0);
 	viewport_height = vec3_div(viewport_dimension[HEIGHT], 2.0);
-	res = vec3_sub(res, viewport_width);
-	viewport_upper_left = vec3_sub(res, viewport_height);
+	viewport_upper_left = vec3_sub(vec3_sub(res, viewport_width), viewport_height);
 	res = vec3_add(pixel_length[WIDTH], pixel_length[HEIGHT]);
 	res = vec3_scale(res, 0.5);
 	first_pixel_location = vec3_add(viewport_upper_left, res);
@@ -67,21 +66,38 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 	t_camera	camera;
 	float		viewport_height;
 	float		viewport_width;
+	double		theta;
+	double		h;
+	int			focal_length;
+	t_vec3		v;
+	t_vec3		w;
+	t_vec3		u;
 
+	camera.lookfrom = vec3_init(-2, 2, 0);
+	camera.lookat = vec3_init(0, 0, -1);
+	camera.view_up = vec3_init(0, 1, 0);
 	camera.image_dimension[WIDTH] = image_width;
 	camera.image_dimension[HEIGHT] = image_height;
-	camera.camera_center = vec3_zero();
-	viewport_height = 2.0;
+	camera.camera_center = camera.lookfrom;
+	camera.vertical_fov = 90;
+	focal_length = vec3_length(vec3_sub(camera.lookfrom, camera.lookat));
+	theta = degrees_to_radians(camera.vertical_fov);
+	h = tan(theta / 2.0);
+	viewport_height = 2.0 * h * focal_length;
 	viewport_width = viewport_height
 		* ((double)camera.image_dimension[WIDTH]
 			/ camera.image_dimension[HEIGHT]);
-	camera.viewport_dimension[WIDTH] = vec3_init(viewport_width, 0, 0);
-	camera.viewport_dimension[HEIGHT] = vec3_init(0, -viewport_height, 0);
+	w = vec3_unit(vec3_sub(camera.lookfrom, camera.lookat));
+	u = vec3_unit(vec3_cross(camera.view_up, w));
+	v = vec3_cross(w, u);
+	camera.viewport_dimension[WIDTH] = vec3_scale(u, viewport_width);
+	camera.viewport_dimension[HEIGHT] = vec3_scale(vec3_neg(v), viewport_height);
 	camera.pixel_length[WIDTH] = vec3_div(camera.viewport_dimension[WIDTH],
 			camera.image_dimension[WIDTH]);
 	camera.pixel_length[HEIGHT] = vec3_div(camera.viewport_dimension[HEIGHT],
 			camera.image_dimension[HEIGHT]);
 	camera.first_pixel_location = locate_first_pixel(camera.camera_center,
+			vec3_scale(w, focal_length),
 			camera.viewport_dimension, camera.pixel_length);
 	return (camera);
 }

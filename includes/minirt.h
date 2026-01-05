@@ -43,7 +43,7 @@
 #define FAILURE 1
 
 //Window settings
-#define WIN_WIDTH 500
+#define WIN_WIDTH 100
 #define WIN_ASPECT_RATIO (16.0f/9.0f)
 #define WIN_NAME "miniRT"
 
@@ -83,12 +83,17 @@ typedef struct s_camera
 	t_point3		camera_center;
 	float			aspect_ratio;
 	t_point3		first_pixel_location;
+	unsigned int	vertical_fov;
+	t_point3		lookfrom;
+	t_point3		lookat;
+	t_vec3			view_up;
 }	t_camera;
 
 //data of rays hitting a surface
 typedef struct s_hit_record
 {
 	t_point3	p;
+	t_color3	color;
 	t_vec3		normal;
 	double		t;
 }	t_hit_record;
@@ -110,6 +115,7 @@ typedef struct s_sphere
 {
 	t_point3	center;
 	double		radius;
+	t_color3	color;
 }	t_sphere;
 
 typedef union s_object
@@ -123,7 +129,7 @@ typedef struct s_hittable
 {
     t_object_type	type; //is the type necessary?
 	t_object		shape;
-	bool			(*hit)(const t_point3, double, const t_ray, t_interval, t_hit_record*);
+	bool			(*hit)(t_object object, const t_ray, t_interval, t_hit_record*);
 }	t_hittable;
 
 typedef struct s_hittable_list
@@ -177,7 +183,7 @@ typedef struct s_interval
 {
 	double	min;
 	double	max;
-} t_interval;	
+} t_interval;
 
 //-------------Files and functions-------------
 //main.c
@@ -203,10 +209,10 @@ t_point3	at(t_ray ray, double t);
 int			compute_pixel_color(int x, int y, t_camera camera, t_hittable *objects);
 
 //sphere.c
-bool		hit_sphere(const t_point3 center, double radius,
+bool		hit_sphere(t_object object,
                        const t_ray r, t_interval ray_t,
                        t_hit_record *rec);
-t_hittable	create_sphere(t_point3 center, double radius);
+t_hittable	create_sphere(t_point3 center, t_color3 color, double radius);
 
 //object.c
 bool		hit(t_hittable *object, const t_ray r, t_interval ray_t, t_hit_record *rec);

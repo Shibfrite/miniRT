@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/31 17:34:05 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/05 16:45:34 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static t_color3	ray_color(const t_ray r, t_hittable *objects, int depth)
 	{
 		//t_vec3 dir = random_on_hemisphere(hit_record.normal);
 		t_vec3 dir = vec3_add(hit_record.normal, random_unit_vector());
-		return (vec3_scale(ray_color(ray_init(hit_record.p, dir), objects, --depth), 0.5));
+		return (vec3_mul(ray_color(ray_init(hit_record.p, dir), objects, --depth), hit_record.color));
 	}
 	unit_direction = vec3_unit(r.direction);
 	a = 0.5 * (unit_direction.e[1] + 1.0);

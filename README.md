@@ -12,10 +12,15 @@ ignored chapters:
 6.3 An Abstraction for Hittable Objects.
 	Irrelevant in C, apart from the modified hit function.
 6.4 Front Faces Versus Back Faces.
-	Irrelevant given our requirements.
+10. Metal
+11. Dielectrics
+13. Defocus blur
 
 We aren't required to have different materials, hence every object will be matte.
+We have can change fovs.
 
 Temp note:
-After implementing anti-aliasing and matte matter my result is lighter
-Than what the guide shows. Still seems correct though.
+Need to implement:
+	planes
+	cylinders
+	light sources
