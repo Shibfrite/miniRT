@@ -6,7 +6,7 @@
 #    By: makurek <makurek@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 22:14:00 by makurek           #+#    #+#              #
-#    Updated: 2025/12/29 16:37:29 by makurek        ########   odam.nl         #
+#    Updated: 2026/01/06 17:36:05 by makurek        ########   odam.nl         #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ INC_DIR		:= includes
 EXEC_DIR	:= exec
 
 SRC_FILES	:= main.c input.c libx.c
-EXEC_FILES	:= put_image.c rays.c vec3.c colors.c sphere.c objects.c interval.c utils.c
+EXEC_FILES	:= put_image.c rays.c vec3.c colors.c sphere.c objects.c interval.c utils.c plane.c cylinder.c
 EXEC_PREFIX	:= $(SRC_DIR)/$(EXEC_DIR)/
 SRC			:= $(addprefix $(SRC_DIR)/,$(SRC_FILES)) $(addprefix $(EXEC_PREFIX),$(EXEC_FILES)) 
 OBJ			:= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))

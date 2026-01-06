@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 17:58:26 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/05 16:32:55 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/06 16:46:57 by makurek        ########   odam.nl        */
 /*																			*/
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ static t_point3	locate_first_pixel(t_point3 camera_center,
 	res = vec3_sub(camera_center, focal_length);
 	viewport_width = vec3_div(viewport_dimension[WIDTH], 2.0);
 	viewport_height = vec3_div(viewport_dimension[HEIGHT], 2.0);
-	viewport_upper_left = vec3_sub(vec3_sub(res, viewport_width), viewport_height);
+	viewport_upper_left = vec3_sub(vec3_sub(res, viewport_width),
+			viewport_height);
 	res = vec3_add(pixel_length[WIDTH], pixel_length[HEIGHT]);
 	res = vec3_scale(res, 0.5);
 	first_pixel_location = vec3_add(viewport_upper_left, res);
@@ -73,8 +74,8 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 	t_vec3		w;
 	t_vec3		u;
 
-	camera.lookfrom = vec3_init(-2, 2, 0);
-	camera.lookat = vec3_init(0, 0, -1);
+	camera.lookfrom = vec3_init(-2, 2, 1);
+	camera.lookat = vec3_init(0, 0, 0);
 	camera.view_up = vec3_init(0, 1, 0);
 	camera.image_dimension[WIDTH] = image_width;
 	camera.image_dimension[HEIGHT] = image_height;
@@ -91,7 +92,8 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 	u = vec3_unit(vec3_cross(camera.view_up, w));
 	v = vec3_cross(w, u);
 	camera.viewport_dimension[WIDTH] = vec3_scale(u, viewport_width);
-	camera.viewport_dimension[HEIGHT] = vec3_scale(vec3_neg(v), viewport_height);
+	camera.viewport_dimension[HEIGHT] = vec3_scale(vec3_neg(v),
+			viewport_height);
 	camera.pixel_length[WIDTH] = vec3_div(camera.viewport_dimension[WIDTH],
 			camera.image_dimension[WIDTH]);
 	camera.pixel_length[HEIGHT] = vec3_div(camera.viewport_dimension[HEIGHT],

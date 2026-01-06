@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 18:33:11 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/05 15:44:06 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/05 17:54:58 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ double	vec3_length_squared(const t_vec3 v);
 t_vec3	vec3_unit(const t_vec3 v);
 
 //random vectors
-t_vec3	vec3_random();
+t_vec3	vec3_random(void);
 t_vec3	vec3_random_range(double min, double max);
 t_vec3	random_unit_vector(void);
 t_vec3	random_on_hemisphere(const t_vec3 normal);

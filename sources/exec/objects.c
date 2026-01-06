@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/18 12:56:23 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/05 16:43:36 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/06 17:49:19 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	hit(t_hittable *object, const t_ray r,
 	while (object[i].type != OBJ_NULL)
 	{
 		shape = object[i].shape;
-		if (object[i].hit(shape, r, ray_t, &temp_rec))
+		if (object[i].hit(object[i], r, ray_t, &temp_rec))
 		{
 			hit_anything = true;
 			closest_so_far = temp_rec.t;
