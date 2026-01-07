@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 10:00:00 by anpayot           #+#    #+#             */
-/*   Updated: 2025/12/19 00:29:19 by anpayot          ###   ########.fr       */
+/*   Updated: 2025/12/24 18:50:47 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ int	check_file_extension(char *filename)
 	Main parsing entry point
 	TODO: implement full parsing
 */
-int	parse_scene(char *filename)
+int	parse_scene(t_scene *scene, char *filename)
 {
 	int	fd;
 
+	if (!scene)
+		return (FAILURE);
 	if (check_file_extension(filename) == FAILURE)
 	{
 		ft_putendl_fd(ERR_EXTENSION, 2);
@@ -48,6 +50,7 @@ int	parse_scene(char *filename)
 		ft_putendl_fd(ERR_OPEN, 2);
 		return (FAILURE);
 	}
+	(void)scene;
 	// TODO: read file with get_next_line
 	// TODO: parse each line (A, C, L, sp, pl, cy)
 	// TODO: fill scene structure
@@ -66,23 +69,13 @@ int	parse_error(char *msg)
 }
 
 /*
-	Skip spaces and tabs, return pointer to next non-whitespace
-*/
-char	*skip_whitespace(char *str)
-{
-	while (*str && (*str == ' ' || *str == '\t'))
-		str++;
-	return (str);
-}
-
-/*
 	Check if line is empty or a comment (starts with #)
 */
-int	is_empty_or_comment(char *line)
+int	is_empty_or_comment(const char *line)
 {
 	char	*ptr;
 
-	ptr = skip_whitespace(line);
+	ptr = (char *)skip_spaces(line);
 	if (*ptr == '\0' || *ptr == '\n' || *ptr == '#')
 		return (1);
 	return (0);

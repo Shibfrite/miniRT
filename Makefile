@@ -6,7 +6,7 @@
 #    By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 22:14:00 by makurek           #+#    #+#              #
-#    Updated: 2025/12/18 17:50:32 by anpayot          ###   ########.fr        #
+#    Updated: 2025/12/24 18:50:47 by anpayot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ INC_DIR		:= includes
 PARSE_DIR	:= parse
 
 SRC_FILES	:= main.c input.c libx.c put_image.c rays.c vec3.c colors.c
-PARSE_FILES	:= parser.c
+PARSE_FILES	:= parser.c parse_numbers.c parse_vectors.c parse_colors.c parse_line.c
 SRC_PREFIX	:= $(SRC_DIR)/
 PARS_PREFIX	:= $(SRC_DIR)/$(PARSE_DIR)/
 SRC			:= $(addprefix $(SRC_DIR)/,$(SRC_FILES)) $(addprefix $(PARS_PREFIX),$(PARSE_FILES))

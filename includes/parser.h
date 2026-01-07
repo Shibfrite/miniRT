@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 10:00:00 by anpayot           #+#    #+#             */
-/*   Updated: 2025/12/19 00:30:42 by anpayot          ###   ########.fr       */
+/*   Updated: 2025/12/24 18:50:47 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,19 @@
 
 
 //-------------Parsing functions-------------
-int		parse_scene(char *filename);
+int		parse_scene(t_scene *scene, char *filename);
 int		check_file_extension(char *filename);
 int		parse_error(char *msg);
-char	*skip_whitespace(char *str);
-int		is_empty_or_comment(char *line);
+const char	*skip_spaces(const char *str);
+int		is_empty_or_comment(const char *line);
+char		**split_whitespace(const char *line);
+void		free_tokens(char **tokens);
+
+//-------------Parsing helpers-------------
+int		parse_double_token(const char *s, double *out);
+int		parse_int_range(const char *s, int min, int max, int *out);
+int		parse_vec3(const char *s, t_vec3 *out);
+int		parse_normalized_vec3(const char *s, t_vec3 *out);
+int		parse_color(const char *s, t_color3 *out);
 
 #endif
