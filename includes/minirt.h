@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/06 17:46:21 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/08 16:45:52 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,7 @@ int			compute_pixel_color(int x, int y, t_camera camera,
 				t_hittable *objects);
 
 //sphere.c
+double		compute_root(double h, double a, double c, t_interval ray_t);
 t_hittable	create_sphere(t_point3 center, t_color3 color, double radius);
 bool		hit_sphere(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);

@@ -6,12 +6,29 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/18 12:56:23 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/06 17:49:19 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/08 16:18:42 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
+/*
+	For each ray we must find:
+		P = the coordinates of the intersection point for ray/shape.
+		t = the distance from the closest shape.
+		n = the surface normal.
+	
+	For P:
+		We solve the equation P(t) = O + tD
+	For t:
+		Each shape has an equation that makes us able to determin
+		if a given ray intersects the shape and where.
+		Spheres:	(abs(P - C))^2 = R^2
+		Cylinder:	(abs(P−(P⋅N)N-C))^2 = R^2
+		Plane:		(P - P0) * N = 0
+		Then we replace P by its equation and solve.
+
+ */
 bool	hit(t_hittable *object, const t_ray r,
 		t_interval ray_t, t_hit_record *rec)
 {
