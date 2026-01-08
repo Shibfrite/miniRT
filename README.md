@@ -21,6 +21,4 @@ We have can change fovs.
 
 Temp note:
 Need to implement:
-	planes
-	cylinders
 	light sources
