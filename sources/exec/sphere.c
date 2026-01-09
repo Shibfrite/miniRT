@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 17:17:28 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/06 17:49:18 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/08 16:49:01 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,20 @@
 /*
 	helper for the hit_sphere function.
 */
-static double	compute_root(double h, double a, double c, t_interval ray_t)
+double compute_root(double h, double a, double c, t_interval ray_t)
 {
-	double	root;
-	double	sqrtd;
-	double	discriminant;
+    double discriminant;
+    double sqrtd;
+    double root;
 
-	discriminant = h * h - a * c;
-	if (discriminant < 0)
-		return (false);
-	sqrtd = sqrt(discriminant);
-	root = (h - sqrtd) / a;
-	if (!interval_surrounds(ray_t, root))
-		root = (h + sqrtd) / a;
-	return (root);
+    discriminant = h*h - a*c;
+    if (discriminant < 0.0 || fabs(a) < 1e-12)
+        return (0);
+    sqrtd = sqrt(discriminant);
+    root = (h - sqrtd) / a;
+    if (!interval_contains(ray_t, root))
+        root = (h + sqrtd) / a;
+    return (root);
 }
 
 /*

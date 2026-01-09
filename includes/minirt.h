@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 11:57:18 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 12:48:50 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,8 @@ typedef struct s_hittable
 		t_interval, t_hit_record *);
 }	t_hittable;
 
+
+
 typedef struct s_hittable_list
 {
 	t_hittable	*hittable;
@@ -207,6 +209,7 @@ int			compute_pixel_color(size_t coordinates[2], t_camera camera, t_light light,
 				t_hittable *objects);
 
 //sphere.c
+double		compute_root(double h, double a, double c, t_interval ray_t);
 t_hittable	create_sphere(t_point3 center, t_color3 color, double radius);
 bool		hit_sphere(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);
@@ -217,7 +220,7 @@ bool		hit_plane(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);
 
 //cylinder.c
-t_hittable  create_cylinder(t_point3 center, t_color3 color, double radius, double height, t_vec3 normal);
+t_hittable  create_cylinder(t_point3 center, t_color3 color, double *data, t_vec3 normal);
 bool		hit_cylinder(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);
 

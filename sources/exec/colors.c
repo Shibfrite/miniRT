@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 12:21:48 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 12:56:18 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,28 @@ static t_color3	ray_color(const t_ray r, t_light light, t_hittable *objects,
 /*
     Returns a random 2D offset in a unit square for pixel sampling.
 */
+static t_color3	ray_color(const t_ray r, t_hittable *objects, int depth)
+{
+	double			a;
+	t_vec3			term1;
+	t_vec3			term2;
+	t_hit_record	hit_record;
+	t_vec3			dir;
+
+	if (depth <= 0)
+		return ((t_color3)vec3_init(0, 0, 0));
+	if (hit(objects, r, interval_init(0.001, INFINITY), &hit_record))
+	{
+		dir = vec3_add(hit_record.normal, random_unit_vector());
+		return (vec3_mul(ray_color(ray_init(hit_record.p, dir),
+					objects, --depth), hit_record.color));
+	}
+	a = 0.5 * (vec3_unit(r.direction).e[1] + 1.0);
+	term1 = vec3_scale(vec3_init(1.0, 1.0, 1.0), 1.0 - a);
+	term2 = vec3_scale(vec3_init(0.5, 0.7, 1.0), a);
+	return (vec3_add(term1, term2));
+}
+
 t_vec3	sample_square(void)
 {
 	return (vec3_init(random_double() - 0.5, random_double() - 0.5, 0.0));
