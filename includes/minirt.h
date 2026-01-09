@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/06 17:46:21 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 11:57:18 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,12 @@ typedef struct s_interval
 	double	max;
 }	t_interval;
 
+typedef struct s_light
+{
+	t_point3	pos;
+	t_color3	intensity;
+}	t_light;
+
 //-------------Files and functions-------------
 //main.c
 int			main(void);
@@ -189,7 +195,7 @@ int			key_hook(int keycode, t_window *min_max);
 
 //put_image.c
 t_camera	create_camera(unsigned int image_width, unsigned int image_height);
-void		*render_image(t_window *window, t_camera camera,
+void		*render_image(t_window *window, t_camera camera, t_light light,
 				t_hittable *objects);
 
 //rays.c
@@ -197,7 +203,7 @@ t_ray		ray_init(t_point3 origin, t_vec3 direction);
 t_point3	at(t_ray ray, double t);
 
 //colors.c
-int			compute_pixel_color(int x, int y, t_camera camera,
+int			compute_pixel_color(size_t coordinates[2], t_camera camera, t_light light,
 				t_hittable *objects);
 
 //sphere.c
@@ -225,6 +231,10 @@ double		interval_size(t_interval t);
 bool		interval_contains(t_interval t, double x);
 bool		interval_surrounds(t_interval t, double x);
 double		interval_clamp(t_interval t, double x);
+
+//light.c
+t_color3	shade_light(t_point3 p, t_vec3 normal,
+							t_light light, t_hittable *objects);
 
 //utils.c
 double		degrees_to_radians(double d);

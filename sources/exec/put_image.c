@@ -6,14 +6,14 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 17:58:26 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/06 16:46:57 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 12:20:07 by makurek        ########   odam.nl        */
 /*																			*/
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 /*
-	Interface to use the mlx_get_data_addr function
+    Returns the raw pixel buffer pointer from an MLX image.
 */
 static char	*get_image_data(void *img)
 {
@@ -25,15 +25,7 @@ static char	*get_image_data(void *img)
 }
 
 /*
- 	locates the first pixel of the viewport, at the top left.
-
-	the calculation done is as follows:
-
-		viewport_upper_left = camera_center - vec3(0, 0, focal_length)
-							- viewport_u/2 - viewport_v/2;
-
-		pixel00_loc = viewport_upper_left + 0.5 
-					* (pixel_delta_u + pixel_delta_v);
+    Computes the world‑space position of the top‑left pixel of the viewport.
 */
 static t_point3	locate_first_pixel(t_point3 camera_center,
 								t_vec3 focal_length,
@@ -58,9 +50,7 @@ static t_point3	locate_first_pixel(t_point3 camera_center,
 }
 
 /*
-	init the camera structure.
-	calculates the viewport's dimensions.
-	calculates the dimension the distance between pixels.
+    Builds the camera: orientation vectors, viewport size, pixel spacing, and first‑pixel position.
 */
 t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 {
@@ -105,33 +95,32 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 }
 
 /*
-	we pass on each pixel and compute it's color.
+    Iterates over all pixels and writes each computed color into the image buffer.
 */
-static void	render_pixels(void *img, t_camera camera, t_hittable *objects)
+static void	render_pixels(void *img, t_camera camera, t_light light, t_hittable *objects)
 {
 	unsigned int	*pixels;
-	unsigned int	x;
-	unsigned int	y;
+	size_t			coordinates[2];
 
 	pixels = (unsigned int *)get_image_data(img);
-	y = 0;
-	while (y < camera.image_dimension[HEIGHT])
+	coordinates[1] = 0;
+	while (coordinates[1] < camera.image_dimension[HEIGHT])
 	{
-		x = 0;
-		while (x < camera.image_dimension[WIDTH])
+		coordinates[0] = 0;
+		while (coordinates[0] < camera.image_dimension[WIDTH])
 		{
-			pixels[y * camera.image_dimension[WIDTH] + x]
-				= compute_pixel_color(x, y, camera, objects);
-			x++;
+			pixels[coordinates[1] * camera.image_dimension[WIDTH] + coordinates[0]]
+				= compute_pixel_color(coordinates, camera, light, objects);
+			coordinates[0]++;
 		}
-		y++;
+		coordinates[1]++;
 	}
 }
 
 /*
-	we create an image, fill it and show it.
+    Allocates an MLX image, renders all pixels, and displays it in the window.
 */
-void	*render_image(t_window *window, t_camera camera, t_hittable *objects)
+void	*render_image(t_window *window, t_camera camera, t_light light, t_hittable *objects)
 {
 	void	*img;
 
@@ -139,7 +128,7 @@ void	*render_image(t_window *window, t_camera camera, t_hittable *objects)
 			camera.image_dimension[HEIGHT]);
 	if (!img)
 		close_program(window);
-	render_pixels(img, camera, objects);
+	render_pixels(img, camera, light, objects);
 	mlx_put_image_to_window(window->mlx_ptr, window->win_ptr, img, 0, 0);
 	return (img);
 }

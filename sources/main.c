@@ -21,6 +21,7 @@ int	main(void)
 	unsigned int	window_height;
 	float			aspect_ratio;
 	t_hittable		objects[6];
+	t_light			light;
 
 	ft_bzero(objects, sizeof(objects));
 	window_width = WIN_WIDTH;
@@ -35,7 +36,8 @@ int	main(void)
 	//objects[3] = create_plane(vec3_init(-1, 0, -1.5), (t_color3)vec3_init(0.8, 0.8, 1), vec3_init(1, 0, 0));
 	//objects[4] = create_plane(vec3_init(0, -2, 0), (t_color3)vec3_init(1, 0, -1), vec3_init(0, 0, 1));
 	ft_bzero(&objects[5], sizeof(objects[5]));
-	window->image = render_image(window, camera, objects);
+	light = (t_light){ vec3_init(5,5,5), vec3_init(4,4,4) };
+	window->image = render_image(window, camera, light, objects);
 	mlx_loop(window->mlx_ptr);
 	return (close_program(window));
 }
