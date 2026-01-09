@@ -6,14 +6,15 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/18 12:56:23 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 12:56:46 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 14:42:44 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 /*
-    Iterates over all scene objects and records the closest intersection with the ray.
+    Iterates over all scene objects and records
+	the closest intersection with the ray.
 */
 bool	hit(t_hittable *object, const t_ray r,
 		t_interval ray_t, t_hit_record *rec)

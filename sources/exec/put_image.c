@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 17:58:26 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 13:14:07 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 14:44:20 by makurek        ########   odam.nl        */
 /*																			*/
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static t_point3	locate_first_pixel(t_point3 camera_center,
 }
 
 /*
-    Builds the camera: orientation vectors, viewport size, pixel spacing, and first‑pixel position.
+    Builds the camera: orientation vectors, viewport size,
+	pixel spacing, and first‑pixel position.
 */
 t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 {
@@ -95,7 +96,8 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 }
 
 /*
-    Iterates over all pixels and writes each computed color into the image buffer.
+    Iterates over all pixels and writes each computed color
+	into the image buffer.
 */
 static void	render_pixels(void *img, t_world world)
 {
@@ -111,7 +113,8 @@ static void	render_pixels(void *img, t_world world)
 		coordinates[0] = 0;
 		while (coordinates[0] < camera.image_dimension[WIDTH])
 		{
-			pixels[coordinates[1] * camera.image_dimension[WIDTH] + coordinates[0]]
+			pixels[coordinates[1] * camera.image_dimension[WIDTH]
+				+ coordinates[0]]
 				= compute_pixel_color(coordinates, world);
 			coordinates[0]++;
 		}

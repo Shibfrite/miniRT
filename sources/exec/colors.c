@@ -6,17 +6,18 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 14:27:30 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 14:42:01 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 /*
-    Computes the radiance along a ray using direct lighting and recursive diffuse bounce.
+    Computes the radiance along a ray using direct lighting
+	and recursive diffuse bounce.
 */
-static t_color3	ray_color(const t_ray r, t_lightening lightening, t_hittable *objects,
-				int depth)
+static t_color3	ray_color(const t_ray r, t_lightening lightening,
+				t_hittable *objects, int depth)
 {
 	t_hit_record	rec;
 	t_color3		direct;
@@ -32,15 +33,13 @@ static t_color3	ray_color(const t_ray r, t_lightening lightening, t_hittable *ob
 	direct = lightening.ambient;
 	while (i < lightening.lights_count)
 	{
-		direct = vec3_add(direct,
-			vec3_mul(rec.color,
-			shade_light(rec.p, rec.normal, lightening.lights[i], objects)));
+		direct = vec3_add(direct, vec3_mul(rec.color, shade_light(rec.p,
+						rec.normal, lightening.lights[i], objects)));
 		i++;
 	}
 	bounce_dir = vec3_add(rec.normal, random_unit_vector());
-	bounced = vec3_mul(
-			ray_color(ray_init(rec.p, bounce_dir), lightening, objects, depth - 1),
-			rec.color);
+	bounced = vec3_mul(ray_color(ray_init(rec.p, bounce_dir),
+				lightening, objects, depth - 1), rec.color);
 	return (vec3_add(direct, bounced));
 }
 
@@ -82,7 +81,8 @@ static double	linear_to_gamma(double linear_component)
 }
 
 /*
-    Samples multiple rays for a pixel, accumulates color, applies gamma correction, and packs RGB.
+    Samples multiple rays for a pixel, accumulates color, 
+	applies gamma correction, and packs RGB.
 */
 int	compute_pixel_color(size_t coordinates[2], t_world world)
 {
@@ -95,7 +95,8 @@ int	compute_pixel_color(size_t coordinates[2], t_world world)
 	color = vec3_init(0, 0, 0);
 	while (sample++ < SAMPLES_PER_PIXEL)
 		color = vec3_add(color, ray_color(get_ray(world.camera, coordinates[0],
-						coordinates[1]), world.lightening, world.objects, MAX_DEPTH));
+						coordinates[1]), world.lightening, world.objects,
+					MAX_DEPTH));
 	vec3_div_inplace(&color, SAMPLES_PER_PIXEL);
 	intensity = interval_init(0.000, 0.999);
 	normalised_color[0] = 256 * linear_to_gamma(

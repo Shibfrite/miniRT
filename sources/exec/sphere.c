@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 17:17:28 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/08 16:49:01 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 14:45:20 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,43 +15,43 @@
 /*
 	helper for the hit_sphere function.
 */
-double compute_root(double h, double a, double c, t_interval ray_t)
+double	compute_root(double h, double a, double c, t_interval ray_t)
 {
-    double discriminant;
-    double sqrtd;
-    double root;
+	double	discriminant;
+	double	sqrtd;
+	double	root;
 
-    discriminant = h*h - a*c;
-    if (discriminant < 0.0 || fabs(a) < 1e-12)
-        return (0);
-    sqrtd = sqrt(discriminant);
-    root = (h - sqrtd) / a;
-    if (!interval_contains(ray_t, root))
-        root = (h + sqrtd) / a;
-    return (root);
+	discriminant = h * h - a * c;
+	if (discriminant < 0.0 || fabs(a) < 1e-12)
+		return (0);
+	sqrtd = sqrt(discriminant);
+	root = (h - sqrtd) / a;
+	if (!interval_contains(ray_t, root))
+		root = (h + sqrtd) / a;
+	return (root);
 }
 
 /*
-    calculates if a ray intersects a sphere
+	calculates if a ray intersects a sphere
 
-    a sphere centered at C with radius r satisfies:
-        (P − C)⋅(P − C) = r²
+	a sphere centered at C with radius r satisfies:
+		(P − C)⋅(P − C) = r²
 
-    a ray is:
-        R(t) = O + t·d
+	a ray is:
+		R(t) = O + t·d
 
-    substitute R(t) into the sphere equation and expand:
-        (O + t·d − C)⋅(O + t·d − C) = r²
+	substitute R(t) into the sphere equation and expand:
+		(O + t·d − C)⋅(O + t·d − C) = r²
 
-    this becomes a quadratic in t:
-        a = d⋅d
-        b = −2 d⋅(C − O)
-        c = (C − O)⋅(C − O) − r²
+	this becomes a quadratic in t:
+		a = d⋅d
+		b = −2 d⋅(C − O)
+		c = (C − O)⋅(C − O) − r²
 
-    discriminant = b² − 4ac determines number of intersections:
-        >0 two hits, =0 one hit, <0 no hit
+	discriminant = b² − 4ac determines number of intersections:
+		>0 two hits, =0 one hit, <0 no hit
 
-    solve for t and check if it lies within the allowed interval
+	solve for t and check if it lies within the allowed interval
 */
 bool	hit_sphere(t_hittable object, const t_ray r, t_interval ray_t,
 						t_hit_record *rec)
