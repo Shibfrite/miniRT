@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                         ::::::::           */
+/*   minirt.h                                            :+:    :+:           */
+/*                                                      +:+                   */
+/*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
+/*                                                    +#+                     */
+/*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
+/*   Updated: 2026/01/09 14:29:50 by makurek        ########   odam.nl        */
+/*                                                                            */
+/* ************************************************************************** */
+
 //-------------Header-protection-------------
 #pragma once
 
@@ -34,6 +46,9 @@
 //vec3 functions
 #include "vec3.h"
 
+//bool values
+#include "stdbool.h"
+
 //-------------Defines-------------
 //Return values
 #define SUCCESS 0
@@ -51,17 +66,28 @@
 #define WIDTH 0
 #define HEIGHT 1
 
+//Quality of render
+#define MAX_DEPTH 10
+#define SAMPLES_PER_PIXEL 10
+
 //-------------Structures-------------
 //Contains window data for the mlx
 typedef struct s_window
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
+	void			*image;
 }	t_window;
 
-//those are equivalent, an array of 3 int.
-typedef t_vec3	t_point3;
-typedef t_vec3	t_color3;
+typedef t_vec3				t_point3;
+typedef t_vec3				t_color3;
+
+//intervals
+typedef struct s_interval
+{
+	double	min;
+	double	max;
+}	t_interval;
 
 //rays
 typedef struct s_ray
@@ -79,17 +105,89 @@ typedef struct s_camera
 	t_point3		camera_center;
 	float			aspect_ratio;
 	t_point3		first_pixel_location;
+	unsigned int	vertical_fov;
+	t_point3		lookfrom;
+	t_point3		lookat;
+	t_vec3			view_up;
 }	t_camera;
 
-//Hypothetical struct for any object
-typedef struct s_object
+//data of rays hitting a surface
+typedef struct s_hit_record
 {
-	t_point3		position;
-	t_color3		color;
-	unsigned int	diameter;
-	unsigned int	height;
-	int				value;
+	t_point3	p;
+	t_color3	color;
+	t_vec3		normal;
+	double		t;
+}	t_hit_record;
+
+//identification
+typedef enum s_object_type
+{
+	OBJ_NULL,
+	OBJ_SPHERE,
+	OBJ_PLANE,
+	OBJ_CYLINDER
+}	t_object_type;
+
+typedef struct s_sphere
+{
+	t_point3	center;
+	double		radius;
+}	t_sphere;
+
+typedef struct s_plane
+{
+	t_point3	base;
+	t_vec3		normal;
+}	t_plane;
+
+typedef struct s_cylinder
+{
+	t_point3	center;
+	double		radius;
+	double		height;
+	t_vec3		normal;
+}	t_cylinder;
+
+typedef union s_object
+{
+	t_sphere	sphere;
+	t_plane		plane;
+	t_cylinder	cylinder;
 }	t_object;
+
+typedef struct s_interval	t_interval;
+
+typedef struct s_hittable	t_hittable;
+
+typedef struct s_hittable
+{
+	t_object_type	type;
+	t_object		shape;
+	t_color3		color;
+	bool			(*hit)(t_hittable object, const t_ray,
+		t_interval, t_hit_record *);
+}	t_hittable;
+
+typedef struct s_light
+{
+	t_point3	pos;
+	t_color3	color;
+}	t_light;
+
+typedef struct s_lightening
+{
+	t_light		*lights;
+	size_t		lights_count;
+	t_color3	ambient;
+} t_lightening;
+
+typedef struct s_world
+{
+	t_camera		camera;
+	t_lightening	lightening;
+	t_hittable		*objects;
+}	t_world;
 
 //-------------Files and functions-------------
 //main.c
@@ -105,11 +203,47 @@ int			key_hook(int keycode, t_window *min_max);
 
 //put_image.c
 t_camera	create_camera(unsigned int image_width, unsigned int image_height);
-void		render_image(t_window *window, t_camera camera);
+void		*render_image(t_window *window, t_world world);
 
 //rays.c
 t_ray		ray_init(t_point3 origin, t_vec3 direction);
 t_point3	at(t_ray ray, double t);
 
 //colors.c
-int compute_pixel_color(int x, int y, t_camera camera);
+int			compute_pixel_color(size_t coordinates[2], t_world world);
+
+//sphere.c
+double		compute_root(double h, double a, double c, t_interval ray_t);
+t_hittable	create_sphere(t_point3 center, t_color3 color, double radius);
+bool		hit_sphere(t_hittable object, const t_ray r, t_interval ray_t,
+				t_hit_record *rec);
+
+//plane.c
+t_hittable  create_plane(t_point3 base, t_color3 color, t_vec3 normal);
+bool		hit_plane(t_hittable object, const t_ray r, t_interval ray_t,
+				t_hit_record *rec);
+
+//cylinder.c
+t_hittable  create_cylinder(t_point3 center, t_color3 color, double *data, t_vec3 normal);
+bool		hit_cylinder(t_hittable object, const t_ray r, t_interval ray_t,
+				t_hit_record *rec);
+
+//object.c
+bool		hit(t_hittable *object, const t_ray r, t_interval ray_t,
+				t_hit_record *rec);
+
+//interval.c
+t_interval	interval_init(double min, double max);
+double		interval_size(t_interval t);
+bool		interval_contains(t_interval t, double x);
+bool		interval_surrounds(t_interval t, double x);
+double		interval_clamp(t_interval t, double x);
+
+//light.c
+t_color3	shade_light(t_point3 p, t_vec3 normal,
+							t_light light, t_hittable *objects);
+
+//utils.c
+double		degrees_to_radians(double d);
+double		random_double(void);
+double		random_double_range(double min, double max);
