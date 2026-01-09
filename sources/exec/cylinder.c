@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/06 17:39:32 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/08 18:40:33 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 11:07:31 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static t_vec3	project_on_axis(t_vec3 v, t_vec3 axis)
 {
-	return vec3_scale(axis, vec3_dot(v, axis));
+	return (vec3_scale(axis, vec3_dot(v, axis)));
 }
 
 static bool	hit_cylinder_side(t_cylinder cy, const t_ray r,
@@ -23,27 +23,23 @@ static bool	hit_cylinder_side(t_cylinder cy, const t_ray r,
 	t_vec3	oc;
 	t_vec3	d_perp;
 	t_vec3	oc_perp;
-	double	t_hit;
 	double	y;
 	t_vec3	cp;
-	t_vec3	radial;
 
 	oc = vec3_sub(r.origin, cy.center);
 	d_perp = vec3_sub(r.direction, project_on_axis(r.direction, cy.normal));
 	oc_perp = vec3_sub(oc, project_on_axis(oc, cy.normal));
-	t_hit = compute_root(-0.5 * (2.0 * vec3_dot(d_perp, oc_perp)),
+	rec->t = compute_root(-0.5 * (2.0 * vec3_dot(d_perp, oc_perp)),
 			vec3_dot(d_perp, d_perp),
 			vec3_dot(oc_perp, oc_perp) - cy.radius * cy.radius, ray_t);
-	if (!interval_contains(ray_t, t_hit))
+	if (!interval_contains(ray_t, rec->t))
 		return (false);
-	rec->p = at(r, t_hit);
+	rec->p = at(r, rec->t);
 	y = vec3_dot(vec3_sub(rec->p, cy.center), cy.normal);
 	if (y < 0.0 || y > cy.height)
 		return (false);
-	rec->t = t_hit;
 	cp = vec3_sub(rec->p, cy.center);
-	radial = vec3_sub(cp, project_on_axis(cp, cy.normal));
-	rec->normal = vec3_unit(radial);
+	rec->normal = vec3_unit(vec3_sub(cp, project_on_axis(cp, cy.normal)));
 	return (true);
 }
 
@@ -72,7 +68,7 @@ static bool	hit_cylinder_cap(t_cylinder cy, const t_ray r,
 }
 
 bool	hit_cylinder(t_hittable object, const t_ray r,
-					 t_interval ray_t, t_hit_record *rec)
+					t_interval ray_t, t_hit_record *rec)
 {
 	t_cylinder		cy;
 	t_hit_record	tmp_rec;
@@ -109,15 +105,20 @@ bool	hit_cylinder(t_hittable object, const t_ray r,
 	return (hit_any);
 }
 
-t_hittable	create_cylinder(t_point3 center, t_color3 color, double radius,
-				double height, t_vec3 normal)
+/*
+	data[0] = radius
+	data[1] = height
+	Thank you norminette
+*/
+t_hittable	create_cylinder(t_point3 center, t_color3 color, double *data,
+				t_vec3 normal)
 {
 	t_hittable	obj;
 	t_cylinder	cylinder;
 
 	cylinder.center = center;
-	cylinder.radius = radius;
-	cylinder.height = height;
+	cylinder.radius = data[0];
+	cylinder.height = data[1];
 	cylinder.normal = normal;
 	obj.type = OBJ_CYLINDER;
 	obj.shape.cylinder = cylinder;

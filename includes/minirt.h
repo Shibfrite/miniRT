@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/08 16:45:52 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 11:06:00 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,8 @@ typedef struct s_hittable
 		t_interval, t_hit_record *);
 }	t_hittable;
 
+
+
 typedef struct s_hittable_list
 {
 	t_hittable	*hittable;
@@ -212,7 +214,7 @@ bool		hit_plane(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);
 
 //cylinder.c
-t_hittable  create_cylinder(t_point3 center, t_color3 color, double radius, double height, t_vec3 normal);
+t_hittable  create_cylinder(t_point3 center, t_color3 color, double *data, t_vec3 normal);
 bool		hit_cylinder(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);
 

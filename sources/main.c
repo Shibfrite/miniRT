@@ -21,6 +21,7 @@ int	main(void)
 	unsigned int	window_height;
 	float			aspect_ratio;
 	t_hittable		objects[6];
+	double			data[2];
 
 	ft_bzero(objects, sizeof(objects));
 	window_width = WIN_WIDTH;
@@ -31,7 +32,9 @@ int	main(void)
 	objects[0] = create_sphere(vec3_init(0, -100.5, -1), (t_color3)vec3_init(0.8, 0.8, 0), 100);
 	objects[1] = create_sphere(vec3_init(0, 0, -1.2), (t_color3)vec3_init(0.1, 0.2, 0.5), 0.5);
 	objects[2] = create_sphere(vec3_init(-1, 0, -1), (t_color3)vec3_init(0, 0, 0), 0.5);
-	objects[3] = create_cylinder(vec3_init(-1, 0, -1.5), (t_color3)vec3_init(0.8, 0.8, 1), 1, 1, vec3_init(0, 1, 0));
+	data[0] = 1;
+	data[1] = 1;
+	objects[3] = create_cylinder(vec3_init(-1, 0, -1.5), (t_color3)vec3_init(0.8, 0.8, 1), data, vec3_init(0, 1, 0));
 	//objects[3] = create_plane(vec3_init(-1, 0, -1.5), (t_color3)vec3_init(0.8, 0.8, 1), vec3_init(1, 0, 0));
 	//objects[4] = create_plane(vec3_init(0, -2, 0), (t_color3)vec3_init(1, 0, -1), vec3_init(0, 0, 1));
 	ft_bzero(&objects[5], sizeof(objects[5]));
