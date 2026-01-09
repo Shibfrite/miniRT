@@ -35,7 +35,6 @@ int	main(void)
 	objects[3] = create_cylinder(vec3_init(-1, 0, -1.5), (t_color3)vec3_init(0.8, 0.8, 1), 1, 1, vec3_init(0, 1, 0));
 	//objects[3] = create_plane(vec3_init(-1, 0, -1.5), (t_color3)vec3_init(0.8, 0.8, 1), vec3_init(1, 0, 0));
 	//objects[4] = create_plane(vec3_init(0, -2, 0), (t_color3)vec3_init(1, 0, -1), vec3_init(0, 0, 1));
-	ft_bzero(&objects[5], sizeof(objects[5]));
 	light = (t_light){ vec3_init(5,5,5), vec3_init(4,4,4) };
 	window->image = render_image(window, camera, light, objects);
 	mlx_loop(window->mlx_ptr);
