@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 12:48:50 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 14:29:50 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@
 #define FAILURE 1
 
 //Window settings
-#define WIN_WIDTH 1000
+#define WIN_WIDTH 500
 #define WIN_ASPECT_RATIO (16.0f/9.0f)
 #define WIN_NAME "miniRT"
 
@@ -79,9 +79,15 @@ typedef struct s_window
 	void			*image;
 }	t_window;
 
-//those are equivalent, an array of 3 int.
 typedef t_vec3				t_point3;
 typedef t_vec3				t_color3;
+
+//intervals
+typedef struct s_interval
+{
+	double	min;
+	double	max;
+}	t_interval;
 
 //rays
 typedef struct s_ray
@@ -163,25 +169,25 @@ typedef struct s_hittable
 		t_interval, t_hit_record *);
 }	t_hittable;
 
-
-
-typedef struct s_hittable_list
-{
-	t_hittable	*hittable;
-	size_t		n_obj;
-}	t_hittable_list;
-
-typedef struct s_interval
-{
-	double	min;
-	double	max;
-}	t_interval;
-
 typedef struct s_light
 {
 	t_point3	pos;
-	t_color3	intensity;
+	t_color3	color;
 }	t_light;
+
+typedef struct s_lightening
+{
+	t_light		*lights;
+	size_t		lights_count;
+	t_color3	ambient;
+} t_lightening;
+
+typedef struct s_world
+{
+	t_camera		camera;
+	t_lightening	lightening;
+	t_hittable		*objects;
+}	t_world;
 
 //-------------Files and functions-------------
 //main.c
@@ -197,16 +203,14 @@ int			key_hook(int keycode, t_window *min_max);
 
 //put_image.c
 t_camera	create_camera(unsigned int image_width, unsigned int image_height);
-void		*render_image(t_window *window, t_camera camera, t_light light,
-				t_hittable *objects);
+void		*render_image(t_window *window, t_world world);
 
 //rays.c
 t_ray		ray_init(t_point3 origin, t_vec3 direction);
 t_point3	at(t_ray ray, double t);
 
 //colors.c
-int			compute_pixel_color(size_t coordinates[2], t_camera camera, t_light light,
-				t_hittable *objects);
+int			compute_pixel_color(size_t coordinates[2], t_world world);
 
 //sphere.c
 double		compute_root(double h, double a, double c, t_interval ray_t);

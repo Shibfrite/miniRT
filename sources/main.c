@@ -21,16 +21,21 @@ int	main(void)
 	unsigned int	window_height;
 	float			aspect_ratio;
 	t_hittable		objects[6];
-	t_light			light;
+	t_light			lights[3];
 	double			data[2];
+	t_world			world;
+	t_lightening	lightening;
 
-	ft_bzero(objects, sizeof(objects));
+	//creating the window
 	window_width = WIN_WIDTH;
 	aspect_ratio = WIN_ASPECT_RATIO;
 	window_height = compute_window_height(window_width, aspect_ratio);
 	window = create_window(window_width, window_height);
+
+	//creating the world
 	camera = create_camera(window_width, window_height);
-	objects[0] = create_sphere(vec3_init(0, -100.5, -1), (t_color3)vec3_init(0.8, 0.8, 0), 100);
+	ft_bzero(objects, sizeof(objects));
+	objects[0] = create_sphere(vec3_init(0, -100.5, -1), (t_color3)vec3_init(1, 1, 1), 100);
 	objects[1] = create_sphere(vec3_init(0, 0, -1.2), (t_color3)vec3_init(0.1, 0.2, 0.5), 0.5);
 	objects[2] = create_sphere(vec3_init(-1, 0, -1), (t_color3)vec3_init(0, 0, 0), 0.5);
 	data[0] = 1;
@@ -38,8 +43,18 @@ int	main(void)
 	objects[3] = create_cylinder(vec3_init(-1, 0, -1.5), (t_color3)vec3_init(0.8, 0.8, 1), data, vec3_init(0, 1, 0));
 	//objects[3] = create_plane(vec3_init(-1, 0, -1.5), (t_color3)vec3_init(0.8, 0.8, 1), vec3_init(1, 0, 0));
 	//objects[4] = create_plane(vec3_init(0, -2, 0), (t_color3)vec3_init(1, 0, -1), vec3_init(0, 0, 1));
-	light = (t_light){ vec3_init(5,5,5), vec3_init(4,4,4) };
-	window->image = render_image(window, camera, light, objects);
+	ft_bzero(lights, sizeof(lights));
+	lights[0] = (t_light){vec3_init(5, 5, 5), vec3_init(4, 0, 0)};
+	lights[1] = (t_light){vec3_init(-5, 5, -5), vec3_init(0, 5, 0)};
+	lightening.lights = lights;
+	lightening.lights_count = 2;
+	lightening.ambient = vec3_init(0, 0, 0);
+	world.camera = camera;
+	world.lightening = lightening;
+	world.objects = objects;
+
+	//generating the image
+	window->image = render_image(window, world);
 	mlx_loop(window->mlx_ptr);
 	return (close_program(window));
 }

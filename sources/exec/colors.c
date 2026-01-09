@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 12:56:18 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 14:27:30 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,31 @@
 /*
     Computes the radiance along a ray using direct lighting and recursive diffuse bounce.
 */
-static t_color3	ray_color(const t_ray r, t_light light, t_hittable *objects,
+static t_color3	ray_color(const t_ray r, t_lightening lightening, t_hittable *objects,
 				int depth)
 {
 	t_hit_record	rec;
 	t_color3		direct;
 	t_vec3			bounce_dir;
 	t_color3		bounced;
+	size_t			i;
 
 	if (depth <= 0)
 		return (vec3_init(0, 0, 0));
 	if (!hit(objects, r, interval_init(0.001, INFINITY), &rec))
 		return (vec3_init(0, 0, 0));
-	light = (t_light){vec3_init(5, 5, 5), vec3_init(4, 4, 4)};
-	direct = vec3_mul(rec.color,
-			shade_light(rec.p, rec.normal, light, objects));
+	i = 0;
+	direct = lightening.ambient;
+	while (i < lightening.lights_count)
+	{
+		direct = vec3_add(direct,
+			vec3_mul(rec.color,
+			shade_light(rec.p, rec.normal, lightening.lights[i], objects)));
+		i++;
+	}
 	bounce_dir = vec3_add(rec.normal, random_unit_vector());
 	bounced = vec3_mul(
-			ray_color(ray_init(rec.p, bounce_dir), light, objects, depth - 1),
+			ray_color(ray_init(rec.p, bounce_dir), lightening, objects, depth - 1),
 			rec.color);
 	return (vec3_add(direct, bounced));
 }
@@ -40,28 +47,6 @@ static t_color3	ray_color(const t_ray r, t_light light, t_hittable *objects,
 /*
     Returns a random 2D offset in a unit square for pixel sampling.
 */
-static t_color3	ray_color(const t_ray r, t_hittable *objects, int depth)
-{
-	double			a;
-	t_vec3			term1;
-	t_vec3			term2;
-	t_hit_record	hit_record;
-	t_vec3			dir;
-
-	if (depth <= 0)
-		return ((t_color3)vec3_init(0, 0, 0));
-	if (hit(objects, r, interval_init(0.001, INFINITY), &hit_record))
-	{
-		dir = vec3_add(hit_record.normal, random_unit_vector());
-		return (vec3_mul(ray_color(ray_init(hit_record.p, dir),
-					objects, --depth), hit_record.color));
-	}
-	a = 0.5 * (vec3_unit(r.direction).e[1] + 1.0);
-	term1 = vec3_scale(vec3_init(1.0, 1.0, 1.0), 1.0 - a);
-	term2 = vec3_scale(vec3_init(0.5, 0.7, 1.0), a);
-	return (vec3_add(term1, term2));
-}
-
 t_vec3	sample_square(void)
 {
 	return (vec3_init(random_double() - 0.5, random_double() - 0.5, 0.0));
@@ -99,8 +84,7 @@ static double	linear_to_gamma(double linear_component)
 /*
     Samples multiple rays for a pixel, accumulates color, applies gamma correction, and packs RGB.
 */
-int	compute_pixel_color(size_t coordinates[2], t_camera camera, t_light light,
-				t_hittable *objects)
+int	compute_pixel_color(size_t coordinates[2], t_world world)
 {
 	t_interval		intensity;
 	t_color3		color;
@@ -110,8 +94,8 @@ int	compute_pixel_color(size_t coordinates[2], t_camera camera, t_light light,
 	sample = 0;
 	color = vec3_init(0, 0, 0);
 	while (sample++ < SAMPLES_PER_PIXEL)
-		color = vec3_add(color, ray_color(get_ray(camera, coordinates[0],
-						coordinates[1]), light, objects, MAX_DEPTH));
+		color = vec3_add(color, ray_color(get_ray(world.camera, coordinates[0],
+						coordinates[1]), world.lightening, world.objects, MAX_DEPTH));
 	vec3_div_inplace(&color, SAMPLES_PER_PIXEL);
 	intensity = interval_init(0.000, 0.999);
 	normalised_color[0] = 256 * linear_to_gamma(

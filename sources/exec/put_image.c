@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 17:58:26 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 12:20:07 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 13:14:07 by makurek        ########   odam.nl        */
 /*																			*/
 /* ************************************************************************** */
 
@@ -97,11 +97,13 @@ t_camera	create_camera(unsigned int image_width, unsigned int image_height)
 /*
     Iterates over all pixels and writes each computed color into the image buffer.
 */
-static void	render_pixels(void *img, t_camera camera, t_light light, t_hittable *objects)
+static void	render_pixels(void *img, t_world world)
 {
 	unsigned int	*pixels;
 	size_t			coordinates[2];
+	t_camera		camera;
 
+	camera = world.camera;
 	pixels = (unsigned int *)get_image_data(img);
 	coordinates[1] = 0;
 	while (coordinates[1] < camera.image_dimension[HEIGHT])
@@ -110,7 +112,7 @@ static void	render_pixels(void *img, t_camera camera, t_light light, t_hittable 
 		while (coordinates[0] < camera.image_dimension[WIDTH])
 		{
 			pixels[coordinates[1] * camera.image_dimension[WIDTH] + coordinates[0]]
-				= compute_pixel_color(coordinates, camera, light, objects);
+				= compute_pixel_color(coordinates, world);
 			coordinates[0]++;
 		}
 		coordinates[1]++;
@@ -120,15 +122,15 @@ static void	render_pixels(void *img, t_camera camera, t_light light, t_hittable 
 /*
     Allocates an MLX image, renders all pixels, and displays it in the window.
 */
-void	*render_image(t_window *window, t_camera camera, t_light light, t_hittable *objects)
+void	*render_image(t_window *window, t_world world)
 {
 	void	*img;
 
-	img = mlx_new_image(window->mlx_ptr, camera.image_dimension[WIDTH],
-			camera.image_dimension[HEIGHT]);
+	img = mlx_new_image(window->mlx_ptr, world.camera.image_dimension[WIDTH],
+			world.camera.image_dimension[HEIGHT]);
 	if (!img)
 		close_program(window);
-	render_pixels(img, camera, light, objects);
+	render_pixels(img, world);
 	mlx_put_image_to_window(window->mlx_ptr, window->win_ptr, img, 0, 0);
 	return (img);
 }

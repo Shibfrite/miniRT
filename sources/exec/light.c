@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/09 11:38:50 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 12:27:23 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/09 13:29:42 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,5 @@ t_color3	shade_light(t_point3 p, t_vec3 normal,
 	n_dot_light = vec3_dot(normal, dir);
 	if (n_dot_light < 0)
 		return (vec3_init(0, 0, 0));
-	return (vec3_scale(light.intensity, n_dot_light / dist2));
+	return (vec3_scale(light.color, n_dot_light / dist2));
 }
