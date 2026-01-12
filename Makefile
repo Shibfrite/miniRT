@@ -6,7 +6,7 @@
 #    By: makurek <makurek@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 22:14:00 by makurek           #+#    #+#              #
-#    Updated: 2026/01/09 11:36:06 by makurek        ########   odam.nl         #
+#    Updated: 2026/01/12 11:13:21 by makurek        ########   odam.nl         #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,18 +22,22 @@ SRC_DIR		:= sources
 OBJ_DIR		:= objects
 INC_DIR		:= includes
 EXEC_DIR	:= exec
+VEC3_DIR	:= vec3
 
 SRC_FILES	:= main.c input.c libx.c
-EXEC_FILES	:= put_image.c rays.c vec3.c colors.c sphere.c objects.c interval.c utils.c plane.c cylinder.c light.c
+EXEC_FILES	:= put_image.c rays.c colors.c sphere.c objects.c interval.c utils.c plane.c cylinder.c light.c
+VEC3_FILES	:= vec3_construct.c vec3_inplace.c vec3_ops.c vec3_ops2.c vec3_length.c vec3_random.c
 EXEC_PREFIX	:= $(SRC_DIR)/$(EXEC_DIR)/
-SRC			:= $(addprefix $(SRC_DIR)/,$(SRC_FILES)) $(addprefix $(EXEC_PREFIX),$(EXEC_FILES)) 
+VEC3_PREFIX	:= $(EXEC_PREFIX)$(VEC3_DIR)/
+SRC			:= $(addprefix $(SRC_DIR)/,$(SRC_FILES)) $(addprefix $(EXEC_PREFIX),$(EXEC_FILES)) $(addprefix $(VEC3_PREFIX),$(VEC3_FILES)) 
 OBJ			:= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 INC			:= -I$(INC_DIR) -Iminilibx-linux -I$(LIBFT_DIR)/$(INC_DIR)
 MLX			:= -Lminilibx-linux -lmlx -lXext -lX11 -lm
 
 LIBFT		:= $(LIBFT_DIR)/libft.a
 
-DIRS		:= $(INC_DIR) $(SRC_DIR) $(OBJ_DIR) $(LIBFT_DIR) $(SRC_DIR)/$(EXEC_DIR) $(OBJ_DIR)/$(EXEC_DIR)
+DIRS		:= $(INC_DIR) $(SRC_DIR) $(OBJ_DIR) $(LIBFT_DIR) $(SRC_DIR)/$(EXEC_DIR) $(EXEC_PREFIX)$(VEC3_DIR) $(OBJ_DIR)/$(EXEC_DIR) \
+			   $(OBJ_DIR)/$(EXEC_DIR)/$(VEC3_DIR)
 
 all: $(NAME) 
 	echo "Done!"
