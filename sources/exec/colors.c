@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/11 12:19:39 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 14:42:01 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/12 14:13:15 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,12 @@ static t_color3	ray_color(const t_ray r, t_lightening lightening,
 	i = 0;
 	direct = lightening.ambient;
 	while (i < lightening.lights_count)
-	{
 		direct = vec3_add(direct, vec3_mul(rec.color, shade_light(rec.p,
-						rec.normal, lightening.lights[i], objects)));
-		i++;
-	}
+						rec.normal, lightening.lights[i++], objects)));
 	bounce_dir = vec3_add(rec.normal, random_unit_vector());
 	bounced = vec3_mul(ray_color(ray_init(rec.p, bounce_dir),
 				lightening, objects, depth - 1), rec.color);
 	return (vec3_add(direct, bounced));
-}
-
-/*
-    Returns a random 2D offset in a unit square for pixel sampling.
-*/
-t_vec3	sample_square(void)
-{
-	return (vec3_init(random_double() - 0.5, random_double() - 0.5, 0.0));
 }
 
 /*
@@ -60,7 +49,7 @@ t_ray	get_ray(t_camera camera, int x, int y)
 	t_vec3	pixel_sample;
 	t_vec3	ray_direction;
 
-	offset = sample_square();
+	offset = vec3_init(random_double() - 0.5, random_double() - 0.5, 0.0);
 	pixel_sample = vec3_add(
 			vec3_add(camera.first_pixel_location,
 				vec3_scale(camera.pixel_length[WIDTH],

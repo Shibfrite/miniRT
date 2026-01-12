@@ -6,11 +6,23 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/09 11:38:50 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 13:29:42 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/12 14:36:47 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+/*
+	factorise the color and intensity of a light into a single
+	t_color3.
+*/
+t_color3	apply_light(t_color3 color255, t_color3 intensity01)
+{
+	t_color3	lin;
+
+	lin = vec3_scale(color255, 1.0 / 255.0);
+	return (vec3_mul(lin, intensity01));
+}
 
 /*
     Computes diffuse lighting at point p with shadow checking
