@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 14:29:50 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/12 12:56:26 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,14 @@ typedef struct s_window
 	void			*image;
 }	t_window;
 
+//Image data
+typedef struct s_imgmeta
+{
+    int bpp;
+    int line_length;
+    int endian;
+}   t_imgmeta;
+
 typedef t_vec3				t_point3;
 typedef t_vec3				t_color3;
 
@@ -106,8 +114,8 @@ typedef struct s_camera
 	float			aspect_ratio;
 	t_point3		first_pixel_location;
 	unsigned int	vertical_fov;
-	t_point3		lookfrom;
-	t_point3		lookat;
+	t_point3		position;
+	t_point3		axis;
 	t_vec3			view_up;
 }	t_camera;
 
@@ -202,7 +210,8 @@ int			mouse_hook(int button, int x, int y, t_window *min_max);
 int			key_hook(int keycode, t_window *min_max);
 
 //put_image.c
-t_camera	create_camera(unsigned int image_width, unsigned int image_height);
+t_camera	create_camera(unsigned int window_dimensions[2], t_vec3 position,
+				t_vec3 axis, unsigned int vertical_fov);
 void		*render_image(t_window *window, t_world world);
 
 //rays.c
@@ -247,3 +256,4 @@ t_color3	shade_light(t_point3 p, t_vec3 normal,
 double		degrees_to_radians(double d);
 double		random_double(void);
 double		random_double_range(double min, double max);
+t_vec3		project_on_axis(t_vec3 v, t_vec3 axis);

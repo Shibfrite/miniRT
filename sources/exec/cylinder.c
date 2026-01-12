@@ -6,16 +6,11 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/06 17:39:32 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/09 11:07:31 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/12 12:42:55 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-static t_vec3	project_on_axis(t_vec3 v, t_vec3 axis)
-{
-	return (vec3_scale(axis, vec3_dot(v, axis)));
-}
 
 static bool	hit_cylinder_side(t_cylinder cy, const t_ray r,
 				t_interval ray_t, t_hit_record *rec)
@@ -67,58 +62,49 @@ static bool	hit_cylinder_cap(t_cylinder cy, const t_ray r,
 	return (true);
 }
 
+static void	update_hit(bool *hit_any, double *closest,
+			t_hit_record *rec, t_hit_record tmp)
+{
+	*hit_any = true;
+	*closest = tmp.t;
+	*rec = tmp;
+}
+
 bool	hit_cylinder(t_hittable object, const t_ray r,
-					t_interval ray_t, t_hit_record *rec)
+			t_interval ray_t, t_hit_record *rec)
 {
 	t_cylinder		cy;
-	t_hit_record	tmp_rec;
+	t_hit_record	tmp;
 	bool			hit_any;
 	double			closest;
 
 	cy = object.shape.cylinder;
 	hit_any = false;
 	closest = ray_t.max;
-	if (hit_cylinder_side(cy, r, ray_t, &tmp_rec) && tmp_rec.t < closest)
+	if (hit_cylinder_side(cy, r, ray_t, &tmp) && tmp.t < closest)
+		update_hit(&hit_any, &closest, rec, tmp);
+	if (hit_cylinder_cap(cy, r, ray_t, &tmp) && tmp.t < closest)
 	{
-		hit_any = true;
-		closest = tmp_rec.t;
-		*rec = tmp_rec;
-	}
-	if (hit_cylinder_cap(cy, r, ray_t, &tmp_rec)
-		&& tmp_rec.t < closest)
-	{
-		tmp_rec.normal = vec3_neg(tmp_rec.normal);
-		hit_any = true;
-		closest = tmp_rec.t;
-		*rec = tmp_rec;
+		tmp.normal = vec3_neg(tmp.normal);
+		update_hit(&hit_any, &closest, rec, tmp);
 	}
 	cy.center = vec3_add(cy.center, vec3_scale(cy.normal, cy.height));
-	if (hit_cylinder_cap(cy, r, ray_t, &tmp_rec)
-		&& tmp_rec.t < closest)
-	{
-		hit_any = true;
-		closest = tmp_rec.t;
-		*rec = tmp_rec;
-	}
+	if (hit_cylinder_cap(cy, r, ray_t, &tmp) && tmp.t < closest)
+		update_hit(&hit_any, &closest, rec, tmp);
 	if (hit_any)
 		rec->color = object.color;
 	return (hit_any);
 }
 
-/*
-	data[0] = radius
-	data[1] = height
-	Thank you norminette
-*/
-t_hittable	create_cylinder(t_point3 center, t_color3 color, double *data,
+t_hittable	create_cylinder(t_point3 center, t_color3 color, double *dimensions,
 				t_vec3 normal)
 {
 	t_hittable	obj;
 	t_cylinder	cylinder;
 
 	cylinder.center = center;
-	cylinder.radius = data[0];
-	cylinder.height = data[1];
+	cylinder.radius = dimensions[WIDTH];
+	cylinder.height = dimensions[HEIGHT];
 	cylinder.normal = normal;
 	obj.type = OBJ_CYLINDER;
 	obj.shape.cylinder = cylinder;
