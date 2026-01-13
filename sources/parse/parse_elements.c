@@ -26,8 +26,7 @@ int	parse_ambient(t_scene *scene, char **tokens)
 		return (parse_error(ERR_INVALID_VALUE));
 	if (parse_color(tokens[2], &scene->ambient.color) == FAILURE)
 		return (parse_error(ERR_INVALID_VALUE));
-	scene->ambient.color = vec3_div(scene->ambient.color, 255.0);
-	scene->ambient.color = vec3_scale(scene->ambient.color, ratio);
+	scene->ambient.color = normalise_light(scene->ambient.color, ratio);
 	scene->ambient.ratio = ratio;
 	scene->ambient.is_set = true;
 	return (SUCCESS);
@@ -70,8 +69,7 @@ int	parse_light(t_scene *scene, char **tokens)
 		return (parse_error(ERR_INVALID_VALUE));
 	if (parse_color(tokens[3], &light.color) == FAILURE)
 		return (parse_error(ERR_INVALID_VALUE));
-	light.color = vec3_div(light.color, 255.0);
-	light.color = vec3_scale(light.color, brightness);
+	light.color = normalise_light(light.color, brightness);
 	scene->lights[scene->light_count] = light;
 	scene->light_count++;
 	return (SUCCESS);

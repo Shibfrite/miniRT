@@ -38,14 +38,14 @@
 #include "libft.h"
 //not yet used
 
-//mlx functons
-#include "mlx.h"
-#ifdef __linux__
+// mlx functions (optional)
+// Define USE_MINILIBX when building the full graphical program so the
+// real MiniLibX headers are included. For parsing-only builds this
+// header may be omitted to avoid requiring the library at compile time.
+#ifdef USE_MINILIBX
+# include "mlx.h"
 # include <X11/X.h>
 # include <X11/Xlib.h>
-#else
-# define DestroyNotify 17
-# define StructureNotifyMask (1L << 17)
 #endif
 
 //vec3 functions
@@ -59,11 +59,8 @@
 #define SUCCESS 0
 #define FAILURE 1
 
-#ifdef __linux__
-# define KEY_ESCAPE 65307
-#else
-# define KEY_ESCAPE 53
-#endif
+// single-keycode definition (use Linux value by default)
+#define KEY_ESCAPE 65307
 
 //Window settings
 #define WIN_WIDTH 500

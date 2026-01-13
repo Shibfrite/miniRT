@@ -68,5 +68,6 @@ int		parse_int_range(const char *s, int min, int max, int *out);
 int		parse_vec3(const char *s, t_vec3 *out);
 int		parse_normalized_vec3(const char *s, t_vec3 *out);
 int		parse_color(const char *s, t_color3 *out);
+t_color3	normalise_light(t_color3 color, double brightness);
 
 #endif
