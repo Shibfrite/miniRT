@@ -14,7 +14,7 @@ NAME		:= miniRT
 
 CC			:= cc 
 RM			:= rm -rf
-CFLAGS		:= -Wall -Wextra -Werror -g 
+CFLAGS		:= -Wall -Wextra -Werror -g -DUSE_MINILIBX
 MAKE		:= make -s -C
 
 LIBFT_DIR	:= libft
@@ -23,21 +23,29 @@ OBJ_DIR		:= objects
 INC_DIR		:= includes
 EXEC_DIR	:= exec
 VEC3_DIR	:= vec3
+PARSE_DIR	:= parse
+
+MLX_DIR		:= minilibx-linux
+MLX_INC		:= -I$(MLX_DIR)
+MLX_LINK	:= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
 SRC_FILES	:= main.c input.c libx.c
 EXEC_FILES	:= put_image.c rays.c colors.c sphere.c objects.c interval.c utils.c plane.c cylinder.c light.c
 VEC3_FILES	:= vec3_construct.c vec3_inplace.c vec3_ops.c vec3_ops2.c vec3_length.c vec3_random.c
+PARSE_FILES	:= parser.c parse_line.c parse_colors.c parse_numbers.c parse_vectors.c scene_to_world.c parse_elements.c parse_objects.c parse_utils.c
 EXEC_PREFIX	:= $(SRC_DIR)/$(EXEC_DIR)/
 VEC3_PREFIX	:= $(EXEC_PREFIX)$(VEC3_DIR)/
-SRC			:= $(addprefix $(SRC_DIR)/,$(SRC_FILES)) $(addprefix $(EXEC_PREFIX),$(EXEC_FILES)) $(addprefix $(VEC3_PREFIX),$(VEC3_FILES)) 
+PARSE_PREFIX:= $(SRC_DIR)/$(PARSE_DIR)/
+SRC			:= $(addprefix $(SRC_DIR)/,$(SRC_FILES)) $(addprefix $(EXEC_PREFIX),$(EXEC_FILES)) \
+			   $(addprefix $(VEC3_PREFIX),$(VEC3_FILES)) $(addprefix $(PARSE_PREFIX),$(PARSE_FILES)) 
 OBJ			:= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
-INC			:= -I$(INC_DIR) -Iminilibx-linux -I$(LIBFT_DIR)/$(INC_DIR)
-MLX			:= -Lminilibx-linux -lmlx -lXext -lX11 -lm
+INC			:= -I$(INC_DIR) $(MLX_INC) -I$(LIBFT_DIR)/$(INC_DIR)
+MLX			:= $(MLX_LINK)
 
 LIBFT		:= $(LIBFT_DIR)/libft.a
 
 DIRS		:= $(INC_DIR) $(SRC_DIR) $(OBJ_DIR) $(LIBFT_DIR) $(SRC_DIR)/$(EXEC_DIR) $(EXEC_PREFIX)$(VEC3_DIR) $(OBJ_DIR)/$(EXEC_DIR) \
-			   $(OBJ_DIR)/$(EXEC_DIR)/$(VEC3_DIR)
+			   $(OBJ_DIR)/$(EXEC_DIR)/$(VEC3_DIR) $(SRC_DIR)/$(PARSE_DIR) $(OBJ_DIR)/$(PARSE_DIR)
 
 all: $(NAME) 
 	echo "Done!"
@@ -45,7 +53,7 @@ all: $(NAME)
 
 CMLX:
 	echo "Compiling MLX..."
-	$(MAKE) minilibx-linux
+	$(MAKE) $(MLX_DIR)
 	echo "MLX compiled successfully."
 
 $(NAME): $(OBJ) $(LIBFT) CMLX

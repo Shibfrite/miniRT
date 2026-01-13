@@ -21,7 +21,9 @@ static void	initialize_mlx_resources(void **mlx_ptr, void **win_ptr,
 	*win_ptr = mlx_new_window(*mlx_ptr, width, height, WIN_NAME);
 	if (!(*win_ptr))
 	{
+#ifdef __linux__
 		mlx_destroy_display(*mlx_ptr);
+#endif
 		free(*mlx_ptr);
 		exit(1);
 	}
@@ -66,11 +68,10 @@ int	close_program(void *param)
 		mlx_clear_window(window->mlx_ptr, window->win_ptr);
 		mlx_destroy_window(window->mlx_ptr, window->win_ptr);
 	}
+#ifdef __linux__
 	if (window->mlx_ptr)
-	{
 		mlx_destroy_display(window->mlx_ptr);
-		free(window->mlx_ptr);
-	}
+#endif
 	free(window);
 	return (SUCCESS);
 }

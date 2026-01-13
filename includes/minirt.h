@@ -38,10 +38,15 @@
 #include "libft.h"
 //not yet used
 
-//mlx functons
-#include "mlx.h"
-#include <X11/X.h>
-#include <X11/Xlib.h>
+// mlx functions (optional)
+// Define USE_MINILIBX when building the full graphical program so the
+// real MiniLibX headers are included. For parsing-only builds this
+// header may be omitted to avoid requiring the library at compile time.
+#ifdef USE_MINILIBX
+# include "mlx.h"
+# include <X11/X.h>
+# include <X11/Xlib.h>
+#endif
 
 //vec3 functions
 #include "vec3.h"
@@ -53,6 +58,9 @@
 //Return values
 #define SUCCESS 0
 #define FAILURE 1
+
+// single-keycode definition (use Linux value by default)
+#define KEY_ESCAPE 65307
 
 //Window settings
 #define WIN_WIDTH 500
@@ -197,9 +205,38 @@ typedef struct s_world
 	t_hittable		*objects;
 }	t_world;
 
+//Scene structure for parsing
+#define MAX_OBJECTS 128
+#define MAX_LIGHTS 16
+
+typedef struct s_camera_spec
+{
+	t_point3	position;
+	t_vec3		orientation;
+	double		fov;
+	bool		is_set;
+}	t_camera_spec;
+
+typedef struct s_ambient
+{
+	bool		is_set;
+	double		ratio;
+	t_color3	color;
+}	t_ambient;
+
+typedef struct s_scene
+{
+	t_camera_spec	cam_spec;
+	t_ambient		ambient;
+	t_light			lights[MAX_LIGHTS];
+	size_t			light_count;
+	t_hittable		objects[MAX_OBJECTS];
+	size_t			object_count;
+}	t_scene;
+
 //-------------Files and functions-------------
 //main.c
-int			main(void);
+int			main(int argc, char **argv);
 
 //libx.c
 t_window	*create_window(unsigned int width, unsigned int height);

@@ -84,12 +84,18 @@ t_camera	create_camera(unsigned int window_dimensions[2], t_vec3 position,
 	camera.image_dimension[HEIGHT] = window_dimensions[HEIGHT];
 	camera.camera_center = camera.position;
 	camera.vertical_fov = vertical_fov;
-	focal_length = vec3_length(vec3_sub(camera.position, camera.axis));
+	focal_length = 1;
 	h = tan(degrees_to_radians(camera.vertical_fov) / 2.0);
 	viewport_height = 2.0 * h * focal_length;
 	viewport_width = viewport_height
 		* ((double)camera.image_dimension[WIDTH]
 			/ camera.image_dimension[HEIGHT]);
+	printf("Camera setup:\n");
+	printf("  Position: (%.2f, %.2f, %.2f)\n", camera.position.e[0], camera.position.e[1], camera.position.e[2]);
+	printf("  Axis/Direction: (%.2f, %.2f, %.2f)\n", camera.axis.e[0], camera.axis.e[1], camera.axis.e[2]);
+	printf("  FOV: %u degrees\n", vertical_fov);
+	printf("  Focal length: %d\n", focal_length);
+	printf("  Viewport: %.2f x %.2f\n", viewport_width, viewport_height);
 	camera_setup_view(&camera, viewport_height, viewport_width, focal_length);
 	return (camera);
 }

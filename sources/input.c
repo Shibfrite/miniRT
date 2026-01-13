@@ -35,7 +35,10 @@ int	mouse_hook(int button, int x, int y, t_window *window)
 
 int	key_hook(int keycode, t_window *window)
 {
-	if (keycode == 65307)
-		mlx_loop_end(window->mlx_ptr);
+	if (keycode == KEY_ESCAPE)
+	{
+		close_program(window);
+		exit(SUCCESS);
+	}
 	return (SUCCESS);
 }

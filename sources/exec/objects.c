@@ -22,7 +22,6 @@ bool	hit(t_hittable *object, const t_ray r,
 	t_hit_record	temp_rec;
 	bool			hit_anything;
 	double			closest_so_far;
-	t_object		shape;
 	size_t			i;
 
 	hit_anything = false;
@@ -30,7 +29,6 @@ bool	hit(t_hittable *object, const t_ray r,
 	i = 0;
 	while (object[i].type != OBJ_NULL)
 	{
-		shape = object[i].shape;
 		if (object[i].hit(object[i], r, ray_t, &temp_rec))
 		{
 			hit_anything = true;
