@@ -1,44 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                         ::::::::           */
-/*   input.c                                             :+:    :+:           */
+/*   vec3_construct.c                                    :+:    :+:           */
 /*                                                      +:+                   */
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
-/*   Created: 2025/12/08 18:08:22 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/18 12:16:52 by makurek        ########   odam.nl        */
+/*   Created: 2026/01/12 11:16:45 by makurek        #+#    #+#                */
+/*   Updated: 2026/01/12 11:17:26 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-/*
-static void	zoom()
-{
-}
-*/
+#include <stdio.h>
 
-int	mouse_hook(int button, int x, int y, t_window *window)
+/* init */
+t_vec3	vec3_init(double e0, double e1, double e2)
 {
-	(void)button;
-	(void)x;
-	(void)y;
-	(void)window;
-/*	if (button == 4)
-		zoom();
-	else if (button == 5)
-		zoom();
-	else
-		return (SUCCESS);
-*/	//render
-	return (SUCCESS);
+	t_vec3	v;
+
+	v.e[0] = e0;
+	v.e[1] = e1;
+	v.e[2] = e2;
+	return (v);
 }
 
-int	key_hook(int keycode, t_window *window)
+/* init to 0 */
+t_vec3	vec3_zero(void)
 {
-	if (keycode == KEY_ESCAPE)
-	{
-		close_program(window);
-		exit(SUCCESS);
-	}
-	return (SUCCESS);
+	return (vec3_init(0.0, 0.0, 0.0));
+}
+
+/* printing */
+void	vec3_print(const t_vec3 v)
+{
+	printf("%f %f %f", v.e[0], v.e[1], v.e[2]);
+}
+
+// negate the vector
+t_vec3	vec3_neg(t_vec3 v)
+{
+	return ((t_vec3){-v.e[0], -v.e[1], -v.e[2]});
 }

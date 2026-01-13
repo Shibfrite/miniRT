@@ -1,25 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   libx.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/08 18:08:46 by makurek           #+#    #+#             */
-/*   Updated: 2025/12/18 10:43:06 by anpayot          ###   ########.fr       */
+/*                                                         ::::::::           */
+/*   libx.c                                              :+:    :+:           */
+/*                                                      +:+                   */
+/*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
+/*                                                    +#+                     */
+/*   Created: 2025/12/08 18:08:46 by makurek        #+#    #+#                */
+/*   Updated: 2025/12/18 17:34:37 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-// Event codes cross-platform
-#ifdef __APPLE__
-	#define ON_DESTROY 17
-	#define DESTROY_MASK 0
-#else
-	#define ON_DESTROY 17
-	#define DESTROY_MASK (1L << 17)
-#endif
 
 static void	initialize_mlx_resources(void **mlx_ptr, void **win_ptr,
 		unsigned int width, unsigned int height)
@@ -30,7 +21,7 @@ static void	initialize_mlx_resources(void **mlx_ptr, void **win_ptr,
 	*win_ptr = mlx_new_window(*mlx_ptr, width, height, WIN_NAME);
 	if (!(*win_ptr))
 	{
-#ifndef __APPLE__
+#ifdef __linux__
 		mlx_destroy_display(*mlx_ptr);
 #endif
 		free(*mlx_ptr);
@@ -58,7 +49,7 @@ t_window	*create_window(unsigned int width, unsigned int height)
 	window = init_window(mlx_ptr, win_ptr);
 	mlx_key_hook(win_ptr, key_hook, window);
 	mlx_mouse_hook(win_ptr, mouse_hook, window);
-	mlx_hook(win_ptr, ON_DESTROY, DESTROY_MASK,
+	mlx_hook(win_ptr, DestroyNotify, StructureNotifyMask,
 		close_program, window);
 	return (window);
 }
@@ -68,15 +59,19 @@ int	close_program(void *param)
 	t_window	*window;
 
 	window = (t_window *)param;
+	if (!window)
+		return (FAILURE);
+	if (window->image)
+		mlx_destroy_image(window->mlx_ptr, window->image);
 	if (window->win_ptr)
-		mlx_destroy_window(window->mlx_ptr, window->win_ptr);
-	if (window->mlx_ptr)
 	{
-#ifndef __APPLE__
+		mlx_clear_window(window->mlx_ptr, window->win_ptr);
+		mlx_destroy_window(window->mlx_ptr, window->win_ptr);
+	}
+#ifdef __linux__
+	if (window->mlx_ptr)
 		mlx_destroy_display(window->mlx_ptr);
 #endif
-		free(window->mlx_ptr);
-	}
 	free(window);
-	exit(SUCCESS);
+	return (SUCCESS);
 }

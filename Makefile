@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
+#    Makefile                                            :+:    :+:            #
 #                                                     +:+ +:+         +:+      #
-#    By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+         #
+#    By: makurek <makurek@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 22:14:00 by makurek           #+#    #+#              #
-#    Updated: 2025/12/24 18:50:47 by anpayot          ###   ########.fr        #
+#    Updated: 2026/01/12 11:13:21 by makurek        ########   odam.nl         #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,45 +17,52 @@ RM			:= rm -rf
 CFLAGS		:= -Wall -Wextra -Werror -g 
 MAKE		:= make -s -C
 
-# Detect OS to configure MiniLibX (Linux vs macOS)
-UNAME_S	:= $(shell uname -s)
-
 LIBFT_DIR	:= libft
 SRC_DIR		:= sources
 OBJ_DIR		:= objects
 INC_DIR		:= includes
+EXEC_DIR	:= exec
+VEC3_DIR	:= vec3
 PARSE_DIR	:= parse
 
-SRC_FILES	:= main.c input.c libx.c put_image.c rays.c vec3.c colors.c
-PARSE_FILES	:= parser.c parse_numbers.c parse_vectors.c parse_colors.c parse_line.c
-SRC_PREFIX	:= $(SRC_DIR)/
-PARS_PREFIX	:= $(SRC_DIR)/$(PARSE_DIR)/
-SRC			:= $(addprefix $(SRC_DIR)/,$(SRC_FILES)) $(addprefix $(PARS_PREFIX),$(PARSE_FILES))
-OBJ			:= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+UNAME_S		:= $(shell uname -s)
 
-# MiniLibX configuration per OS
-ifeq ($(UNAME_S),Darwin)
-MLX_DIR		:= minilibx-macos
-INC_MLX		:= -I$(MLX_DIR)
-MLX			:= -L$(MLX_DIR) -lmlx -framework Cocoa -framework Metal -framework MetalKit -framework QuartzCore
+ifeq ($(UNAME_S),Linux)
+	MLX_DIR		:= minilibx-linux
+	MLX_INC		:= -I$(MLX_DIR)
+	MLX_LINK	:= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+else ifeq ($(UNAME_S),Darwin)
+	MLX_DIR		:= minilibx-macos
+	MLX_INC		:= -I$(MLX_DIR)
+	MLX_LINK	:= -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
 else
-MLX_DIR		:= minilibx-linux
-INC_MLX		:= -I$(MLX_DIR)
-MLX			:= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+	$(error Unsupported OS: $(UNAME_S))
 endif
 
-INC			:= -I$(INC_DIR) $(INC_MLX) -I$(LIBFT_DIR)/$(INC_DIR)
+SRC_FILES	:= main.c input.c libx.c
+EXEC_FILES	:= put_image.c rays.c colors.c sphere.c objects.c interval.c utils.c plane.c cylinder.c light.c
+VEC3_FILES	:= vec3_construct.c vec3_inplace.c vec3_ops.c vec3_ops2.c vec3_length.c vec3_random.c
+PARSE_FILES	:= parser.c parse_line.c parse_colors.c parse_numbers.c parse_vectors.c scene_to_world.c parse_elements.c parse_objects.c
+EXEC_PREFIX	:= $(SRC_DIR)/$(EXEC_DIR)/
+VEC3_PREFIX	:= $(EXEC_PREFIX)$(VEC3_DIR)/
+PARSE_PREFIX:= $(SRC_DIR)/$(PARSE_DIR)/
+SRC			:= $(addprefix $(SRC_DIR)/,$(SRC_FILES)) $(addprefix $(EXEC_PREFIX),$(EXEC_FILES)) \
+			   $(addprefix $(VEC3_PREFIX),$(VEC3_FILES)) $(addprefix $(PARSE_PREFIX),$(PARSE_FILES)) 
+OBJ			:= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+INC			:= -I$(INC_DIR) $(MLX_INC) -I$(LIBFT_DIR)/$(INC_DIR)
+MLX			:= $(MLX_LINK)
 
 LIBFT		:= $(LIBFT_DIR)/libft.a
 
-DIRS		:= $(INC_DIR) $(SRC_DIR) $(OBJ_DIR) $(LIBFT_DIR) $(SRC_DIR)/$(PARSE_DIR) $(OBJ_DIR)/$(PARSE_DIR)
+DIRS		:= $(INC_DIR) $(SRC_DIR) $(OBJ_DIR) $(LIBFT_DIR) $(SRC_DIR)/$(EXEC_DIR) $(EXEC_PREFIX)$(VEC3_DIR) $(OBJ_DIR)/$(EXEC_DIR) \
+			   $(OBJ_DIR)/$(EXEC_DIR)/$(VEC3_DIR) $(SRC_DIR)/$(PARSE_DIR) $(OBJ_DIR)/$(PARSE_DIR)
 
 all: $(NAME) 
 	echo "Done!"
 	#explain usage?
 
 CMLX:
-	echo "Compiling MLX in $(MLX_DIR)..."
+	echo "Compiling MLX..."
 	$(MAKE) $(MLX_DIR)
 	echo "MLX compiled successfully."
 

@@ -40,6 +40,13 @@ static char	*dup_token(const char *start, const char *end)
 	return (ft_substr(start, 0, end - start));
 }
 
+static const char	*find_token_end(const char *str)
+{
+	while (*str && !is_space(*str))
+		str++;
+	return (str);
+}
+
 char	**split_whitespace(const char *line)
 {
 	int		count;
@@ -56,10 +63,10 @@ char	**split_whitespace(const char *line)
 	line = skip_spaces(line);
 	while (i < count)
 	{
-		tokens[i] = dup_token(line, skip(line, is_space));
+		tokens[i] = dup_token(line, find_token_end(line));
 		if (!tokens[i])
 			return (free_tokens(tokens), NULL);
-		line = skip(line, is_space);
+		line = find_token_end(line);
 		line = skip_spaces(line);
 		i++;
 	}

@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "parser.h"
 
 unsigned int	compute_window_height(unsigned int window_width,
 		float aspect_ratio)
@@ -11,22 +11,29 @@ unsigned int	compute_window_height(unsigned int window_width,
 	return (window_height);
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	t_window		*window;
-	t_camera		camera;
-	unsigned int	window_width;
-	unsigned int	window_height;
+	unsigned int	window_dimensions[2];
 	float			aspect_ratio;
+	t_scene			scene;
+	t_world			world;
 
-	window_width = WIN_WIDTH;
+	if (argc != 2)
+	{
+		ft_putendl_fd(ERR_USAGE, 2);
+		return (FAILURE);
+	}
+	ft_bzero(&scene, sizeof(t_scene));
+	if (parse_scene(&scene, argv[1]) == FAILURE)
+		return (FAILURE);
+	window_dimensions[WIDTH] = WIN_WIDTH;
 	aspect_ratio = WIN_ASPECT_RATIO;
-	window_height = compute_window_height(window_width, aspect_ratio);
-	window = create_window(window_width, window_height);
-	camera = create_camera(window_width, window_height);
-
-	//start simulation
-	render_image(window, camera);
+	window_dimensions[HEIGHT] = compute_window_height(window_dimensions[WIDTH],
+			aspect_ratio);
+	window = create_window(window_dimensions[WIDTH], window_dimensions[HEIGHT]);
+	world = scene_to_world(&scene, window_dimensions);
+	window->image = render_image(window, world);
 	mlx_loop(window->mlx_ptr);
-	close_program(window);
+	return (close_program(window));
 }
