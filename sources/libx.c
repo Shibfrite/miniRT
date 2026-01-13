@@ -1,16 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                         ::::::::           */
-/*   libx.c                                              :+:    :+:           */
-/*                                                      +:+                   */
-/*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
-/*                                                    +#+                     */
-/*   Created: 2025/12/08 18:08:46 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/18 17:34:37 by makurek        ########   odam.nl        */
+/*                                                        :::      ::::::::   */
+/*   libx.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/08 18:08:46 by makurek           #+#    #+#             */
+/*   Updated: 2026/01/13 21:44:57 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+static void	destroy_mlx_display(void *mlx_ptr)
+{
+#ifdef __linux__
+	if (mlx_ptr)
+		mlx_destroy_display(mlx_ptr);
+#else
+	(void)mlx_ptr;
+#endif
+}
 
 static void	initialize_mlx_resources(void **mlx_ptr, void **win_ptr,
 		unsigned int width, unsigned int height)
@@ -21,9 +31,7 @@ static void	initialize_mlx_resources(void **mlx_ptr, void **win_ptr,
 	*win_ptr = mlx_new_window(*mlx_ptr, width, height, WIN_NAME);
 	if (!(*win_ptr))
 	{
-#ifdef __linux__
-		mlx_destroy_display(*mlx_ptr);
-#endif
+		destroy_mlx_display(*mlx_ptr);
 		free(*mlx_ptr);
 		exit(1);
 	}
@@ -68,10 +76,7 @@ int	close_program(void *param)
 		mlx_clear_window(window->mlx_ptr, window->win_ptr);
 		mlx_destroy_window(window->mlx_ptr, window->win_ptr);
 	}
-#ifdef __linux__
-	if (window->mlx_ptr)
-		mlx_destroy_display(window->mlx_ptr);
-#endif
+	destroy_mlx_display(window->mlx_ptr);
 	free(window);
 	return (SUCCESS);
 }

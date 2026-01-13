@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_elements.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/13 by anpayot           #+#    #+#             */
-/*   Updated: 2026/01/13 by anpayot          ###   ########.fr       */
+/*   Created: 2025/12/24 12:00:00 by anpayot           #+#    #+#             */
+/*   Updated: 2026/01/13 22:01:56 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
