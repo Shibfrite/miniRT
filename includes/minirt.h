@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/12 12:56:26 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/22 13:45:30 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@
 
 //Window settings
 #define WIN_WIDTH 500
-#define WIN_ASPECT_RATIO (16.0f/9.0f)
+// 16:9
+#define WIN_ASPECT_RATIO 1.777f
 #define WIN_NAME "miniRT"
 
 //Camera settings
@@ -90,10 +91,10 @@ typedef struct s_window
 //Image data
 typedef struct s_imgmeta
 {
-    int bpp;
-    int line_length;
-    int endian;
-}   t_imgmeta;
+	int	bpp;
+	int	line_length;
+	int	endian;
+}	t_imgmeta;
 
 typedef t_vec3				t_point3;
 typedef t_vec3				t_color3;
@@ -196,7 +197,7 @@ typedef struct s_lightening
 	t_light		*lights;
 	size_t		lights_count;
 	t_color3	ambient;
-} t_lightening;
+}	t_lightening;
 
 typedef struct s_world
 {
@@ -265,12 +266,13 @@ bool		hit_sphere(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);
 
 //plane.c
-t_hittable  create_plane(t_point3 base, t_color3 color, t_vec3 normal);
+t_hittable	create_plane(t_point3 base, t_color3 color, t_vec3 normal);
 bool		hit_plane(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);
 
 //cylinder.c
-t_hittable  create_cylinder(t_point3 center, t_color3 color, double *data, t_vec3 normal);
+t_hittable	create_cylinder(t_point3 center, t_color3 color,
+				double *data, t_vec3 normal);
 bool		hit_cylinder(t_hittable object, const t_ray r, t_interval ray_t,
 				t_hit_record *rec);
 
@@ -287,7 +289,7 @@ double		interval_clamp(t_interval t, double x);
 
 //light.c
 t_color3	shade_light(t_point3 p, t_vec3 normal,
-							t_light light, t_hittable *objects);
+				t_light light, t_hittable *objects);
 
 //utils.c
 double		degrees_to_radians(double d);
