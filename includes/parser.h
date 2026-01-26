@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                            :+:    :+:           */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 10:00:00 by anpayot           #+#    #+#             */
-/*   Updated: 2026/01/22 13:54:18 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/26 14:25:26 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ const char	*skip_spaces(const char *str);
 int			is_empty_or_comment(const char *line);
 char		**split_whitespace(const char *line);
 void		free_tokens(char **tokens);
+int			parse_line(t_scene *scene, char *line);
+int			parse_identifier(t_scene *scene, char **tokens);
 t_world		scene_to_world(t_scene *scene, unsigned int window_dimensions[2]);
 
 int			parse_ambient(t_scene *scene, char **tokens);
@@ -62,6 +64,24 @@ int			parse_plane(t_scene *scene, char **tokens);
 int			parse_cylinder(t_scene *scene, char **tokens);
 
 //-------------Parsing helpers-------------
+typedef struct s_double_parse
+{
+	int		idx;
+	int		sign;
+	long		int_part;
+	double		frac_part;
+	double		divisor;
+	int		digits;
+} 				t_double_parse;
+
+typedef struct s_cylinder_parse
+{
+	t_point3	center;
+	t_vec3		axis;
+	t_color3	color;
+	double		dims[2];
+} 				t_cylinder_parse;
+
 int			parse_double_token(const char *s, double *out);
 int			parse_int_range(const char *s, int min, int max, int *out);
 int			parse_vec3(const char *s, t_vec3 *out);

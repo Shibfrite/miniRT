@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene_to_world.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/13 by anpayot           #+#    #+#             */
-/*   Updated: 2026/01/13 by anpayot          ###   ########.fr       */
+/*   Created: 2026/01/26 14:06:42 by anpayot           #+#    #+#             */
+/*   Updated: 2026/01/26 14:06:45 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

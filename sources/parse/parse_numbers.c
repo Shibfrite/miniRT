@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_numbers.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 12:00:00 by anpayot           #+#    #+#             */
-/*   Updated: 2025/12/24 18:50:47 by anpayot          ###   ########.fr       */
+/*   Updated: 2026/01/26 14:21:18 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,70 +26,58 @@ static int	consume_int(const char *s, long *value, int *idx)
 	return (digit_count);
 }
 
-static void	init_double_vars(int *idx, int *sign, long *int_part,
-				double *frac_part)
+static void	init_double_parse(t_double_parse *p)
 {
-	*idx = 0;
-	*sign = 1;
-	*int_part = 0;
-	*frac_part = 0.0;
+	p->idx = 0;
+	p->sign = 1;
+	p->int_part = 0;
+	p->frac_part = 0.0;
+	p->divisor = 10.0;
+	p->digits = 0;
 }
 
-static void	apply_sign(const char *s, int *idx, int *sign)
+static void	consume_fraction(const char *s, t_double_parse *p)
 {
-	if (s[*idx] == '+' || s[*idx] == '-')
+	while (ft_isdigit(s[p->idx]))
 	{
-		if (s[*idx] == '-')
-			*sign = -1;
-		*idx += 1;
-	}
-}
-
-static void	consume_fraction(const char *s, int *idx, double *frac_part,
-						 double *divisor, int *digits)
-{
-	while (ft_isdigit(s[*idx]))
-	{
-		*frac_part += (s[*idx] - '0') / *divisor;
-		*divisor *= 10.0;
-		*digits += 1;
-		*idx += 1;
+		p->frac_part += (s[p->idx] - '0') / p->divisor;
+		p->divisor *= 10.0;
+		p->digits += 1;
+		p->idx += 1;
 	}
 }
 
 int	parse_double_token(const char *s, double *out)
 {
-	int		idx;
-	int		sign;
-	long	int_part;
-	double	frac_part;
-	double	divisor;
-	int		digits;
+	t_double_parse	p;
 
 	if (!s || !out)
 		return (FAILURE);
-	divisor = 10.0;
-	digits = 0;
-	init_double_vars(&idx, &sign, &int_part, &frac_part);
-	apply_sign(s, &idx, &sign);
-	digits += consume_int(s, &int_part, &idx);
-	if (s[idx] == '.')
+	init_double_parse(&p);
+	if (s[p.idx] == '+' || s[p.idx] == '-')
 	{
-		idx++;
-		consume_fraction(s, &idx, &frac_part, &divisor, &digits);
+		if (s[p.idx] == '-')
+			p.sign = -1;
+		p.idx += 1;
 	}
-	if (digits == 0 || s[idx] != '\0')
+	p.digits += consume_int(s, &p.int_part, &p.idx);
+	if (s[p.idx] == '.')
+	{
+		p.idx++;
+		consume_fraction(s, &p);
+	}
+	if (p.digits == 0 || s[p.idx] != '\0')
 		return (FAILURE);
-	*out = sign * (int_part + frac_part);
+	*out = p.sign * (p.int_part + p.frac_part);
 	return (SUCCESS);
 }
 
 int	parse_int_range(const char *s, int min, int max, int *out)
 {
-	int	idx;
-	int	sign;
+	int		idx;
+	int		sign;
 	long	value;
-	int	digits;
+	int		digits;
 
 	if (!s || !out)
 		return (FAILURE);

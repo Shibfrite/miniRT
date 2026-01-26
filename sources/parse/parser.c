@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 10:00:00 by anpayot           #+#    #+#             */
-/*   Updated: 2025/12/24 18:50:47 by anpayot          ###   ########.fr       */
+/*   Updated: 2026/01/26 14:25:26 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static int	parse_line(t_scene *scene, char *line);
 static int	validate_scene(t_scene *scene);
+static int	parse_scene_loop(t_scene *scene, int fd);
 
 /*
 	Check if filename ends with .rt
@@ -38,9 +38,7 @@ int	check_file_extension(const char *filename)
 int	parse_scene(t_scene *scene, const char *filename)
 {
 	int		fd;
-	char	*line;
 	int		status;
-	int		err;
 
 	if (!scene)
 		return (FAILURE);
@@ -49,35 +47,16 @@ int	parse_scene(t_scene *scene, const char *filename)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		return (parse_error(ERR_OPEN));
-	err = 0;
-	line = get_next_line(fd, &err);
-	while (line && !err)
-	{
-		if (!is_empty_or_comment(line))
-		{
-			status = parse_line(scene, line);
-			if (status == FAILURE)
-				return (free(line), close(fd), FAILURE);
-		}
-		free(line);
-		line = get_next_line(fd, &err);
-	}
+	status = parse_scene_loop(scene, fd);
 	close(fd);
-	if (err)
-		return (parse_error(ERR_READ));
+	if (status == FAILURE)
+		return (FAILURE);
 	return (validate_scene(scene));
 }
 
 /*
 	Print error message to stderr and return FAILURE
 */
-int	parse_error(const char *msg)
-{
-	ft_putendl_fd("Error", 2);
-	ft_putendl_fd((char *)msg, 2);
-	return (FAILURE);
-}
-
 /*
 	Check if line is empty or a comment (starts with #)
 */
@@ -91,32 +70,6 @@ int	is_empty_or_comment(const char *line)
 	return (0);
 }
 
-static int	parse_line(t_scene *scene, char *line)
-{
-	char	**tokens;
-	int		status;
-
-	tokens = split_whitespace(line);
-	if (!tokens || !tokens[0])
-		return (free_tokens(tokens), FAILURE);
-	if (ft_strcmp(tokens[0], "A") == 0)
-		status = parse_ambient(scene, tokens);
-	else if (ft_strcmp(tokens[0], "C") == 0)
-		status = parse_camera(scene, tokens);
-	else if (ft_strcmp(tokens[0], "L") == 0)
-		status = parse_light(scene, tokens);
-	else if (ft_strcmp(tokens[0], "sp") == 0)
-		status = parse_sphere(scene, tokens);
-	else if (ft_strcmp(tokens[0], "pl") == 0)
-		status = parse_plane(scene, tokens);
-	else if (ft_strcmp(tokens[0], "cy") == 0)
-		status = parse_cylinder(scene, tokens);
-	else
-		status = parse_error(ERR_UNKNOWN_ID);
-	free_tokens(tokens);
-	return (status);
-}
-
 static int	validate_scene(t_scene *scene)
 {
 	if (!scene->cam_spec.is_set)
@@ -128,5 +81,29 @@ static int	validate_scene(t_scene *scene)
 	if (scene->object_count == 0)
 		return (parse_error(ERR_MISSING_OBJECT));
 	scene->objects[scene->object_count].type = OBJ_NULL;
+	return (SUCCESS);
+}
+
+static int	parse_scene_loop(t_scene *scene, int fd)
+{
+	char	*line;
+	int		err;
+	int		status;
+
+	err = 0;
+	line = get_next_line(fd, &err);
+	while (line && !err)
+	{
+		if (!is_empty_or_comment(line))
+		{
+			status = parse_line(scene, line);
+			if (status == FAILURE)
+				return (free(line), FAILURE);
+		}
+		free(line);
+		line = get_next_line(fd, &err);
+	}
+	if (err)
+		return (parse_error(ERR_READ));
 	return (SUCCESS);
 }

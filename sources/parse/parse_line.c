@@ -3,21 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 12:00:00 by anpayot           #+#    #+#             */
-/*   Updated: 2025/12/24 18:50:47 by anpayot          ###   ########.fr       */
+/*   Updated: 2026/01/26 14:25:43 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-const char	*skip_spaces(const char *str)
-{
-	while (*str && is_space(*str))
-		str++;
-	return (str);
-}
+static int	fill_tokens(const char *line, char **tokens, int count);
 
 static int	count_tokens(const char *line)
 {
@@ -35,23 +30,10 @@ static int	count_tokens(const char *line)
 	return (count);
 }
 
-static char	*dup_token(const char *start, const char *end)
-{
-	return (ft_substr(start, 0, end - start));
-}
-
-static const char	*find_token_end(const char *str)
-{
-	while (*str && !is_space(*str))
-		str++;
-	return (str);
-}
-
 char	**split_whitespace(const char *line)
 {
 	int		count;
 	char	**tokens;
-	int		i;
 
 	if (!line)
 		return (NULL);
@@ -59,18 +41,8 @@ char	**split_whitespace(const char *line)
 	tokens = malloc(sizeof(char *) * (count + 1));
 	if (!tokens)
 		return (NULL);
-	i = 0;
-	line = skip_spaces(line);
-	while (i < count)
-	{
-		tokens[i] = dup_token(line, find_token_end(line));
-		if (!tokens[i])
-			return (free_tokens(tokens), NULL);
-		line = find_token_end(line);
-		line = skip_spaces(line);
-		i++;
-	}
-	tokens[count] = NULL;
+	if (fill_tokens(line, tokens, count) == FAILURE)
+		return (free_tokens(tokens), NULL);
 	return (tokens);
 }
 
@@ -88,4 +60,39 @@ void	free_tokens(char **tokens)
 		idx++;
 	}
 	free(tokens);
+}
+
+static int	fill_tokens(const char *line, char **tokens, int count)
+{
+	int			i;
+	const char	*end;
+
+	i = 0;
+	line = skip_spaces(line);
+	while (i < count)
+	{
+		end = line;
+		while (*end && !is_space(*end))
+			end++;
+		tokens[i] = ft_substr(line, 0, end - line);
+		if (!tokens[i])
+			return (FAILURE);
+		line = skip_spaces(end);
+		i++;
+	}
+	tokens[count] = NULL;
+	return (SUCCESS);
+}
+
+int	parse_line(t_scene *scene, char *line)
+{
+	char	**tokens;
+	int		status;
+
+	tokens = split_whitespace(line);
+	if (!tokens || !tokens[0])
+		return (free_tokens(tokens), FAILURE);
+	status = parse_identifier(scene, tokens);
+	free_tokens(tokens);
+	return (status);
 }
