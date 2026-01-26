@@ -80,6 +80,8 @@ t_camera	create_camera(unsigned int window_dimensions[2], t_vec3 position,
 	camera.position = position;
 	camera.axis = axis;
 	camera.view_up = vec3_init(0, 1, 0);
+	if (fabs(axis.e[1]) > 0.999)
+    	camera.view_up = vec3_init(0, 0, 1);
 	camera.image_dimension[WIDTH] = window_dimensions[WIDTH];
 	camera.image_dimension[HEIGHT] = window_dimensions[HEIGHT];
 	camera.camera_center = camera.position;

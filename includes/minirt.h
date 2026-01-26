@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 18:07:53 by makurek           #+#    #+#             */
-/*   Updated: 2026/01/26 16:03:47 by anpayot          ###   ########.fr       */
+/*   Updated: 2026/01/26 17:13:16 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@
 //Quality of render
 # define MAX_DEPTH 10
 # define SAMPLES_PER_PIXEL 10
+# define LIGHT_INTENSITY_FACTOR 4
 
 //-------------Structures-------------
 //Contains window data for the mlx

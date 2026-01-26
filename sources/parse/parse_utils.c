@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 14:04:44 by anpayot           #+#    #+#             */
-/*   Updated: 2026/01/26 14:25:26 by anpayot          ###   ########.fr       */
+/*   Updated: 2026/01/26 16:34:39 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_color3	normalise_light(t_color3 color, double brightness)
 {
 	t_color3	res;
 
-	(void)brightness;
+	brightness *= LIGHT_INTENSITY_FACTOR;
 	res = vec3_div(color, 255.0);
 	res = vec3_scale(res, brightness);
 	if (res.e[0] < 0.0)
@@ -41,11 +41,5 @@ t_color3	normalise_light(t_color3 color, double brightness)
 		res.e[1] = 0.0;
 	if (res.e[2] < 0.0)
 		res.e[2] = 0.0;
-	if (res.e[0] > 1.0)
-		res.e[0] = 1.0;
-	if (res.e[1] > 1.0)
-		res.e[1] = 1.0;
-	if (res.e[2] > 1.0)
-		res.e[2] = 1.0;
 	return (res);
 }
