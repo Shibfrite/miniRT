@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 17:58:26 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/12 12:57:54 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/26 15:58:32 by makurek        ########   odam.nl        */
 /*																			*/
 /* ************************************************************************** */
 
@@ -90,12 +90,6 @@ t_camera	create_camera(unsigned int window_dimensions[2], t_vec3 position,
 	viewport_width = viewport_height
 		* ((double)camera.image_dimension[WIDTH]
 			/ camera.image_dimension[HEIGHT]);
-	printf("Camera setup:\n");
-	printf("  Position: (%.2f, %.2f, %.2f)\n", camera.position.e[0], camera.position.e[1], camera.position.e[2]);
-	printf("  Axis/Direction: (%.2f, %.2f, %.2f)\n", camera.axis.e[0], camera.axis.e[1], camera.axis.e[2]);
-	printf("  FOV: %u degrees\n", vertical_fov);
-	printf("  Focal length: %d\n", focal_length);
-	printf("  Viewport: %.2f x %.2f\n", viewport_width, viewport_height);
 	camera_setup_view(&camera, viewport_height, viewport_width, focal_length);
 	return (camera);
 }

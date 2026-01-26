@@ -6,7 +6,7 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 18:08:46 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/18 17:34:37 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/26 15:57:16 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ static void	initialize_mlx_resources(void **mlx_ptr, void **win_ptr,
 	*win_ptr = mlx_new_window(*mlx_ptr, width, height, WIN_NAME);
 	if (!(*win_ptr))
 	{
-#ifdef __linux__
 		mlx_destroy_display(*mlx_ptr);
-#endif
 		free(*mlx_ptr);
 		exit(1);
 	}
@@ -68,10 +66,8 @@ int	close_program(void *param)
 		mlx_clear_window(window->mlx_ptr, window->win_ptr);
 		mlx_destroy_window(window->mlx_ptr, window->win_ptr);
 	}
-#ifdef __linux__
 	if (window->mlx_ptr)
 		mlx_destroy_display(window->mlx_ptr);
-#endif
 	free(window);
 	return (SUCCESS);
 }

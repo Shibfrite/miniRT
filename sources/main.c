@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                         ::::::::           */
+/*   main.c                                              :+:    :+:           */
+/*                                                      +:+                   */
+/*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
+/*                                                    +#+                     */
+/*   Created: 2026/01/26 15:51:04 by makurek        #+#    #+#                */
+/*   Updated: 2026/01/26 15:51:06 by makurek        ########   odam.nl        */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
 unsigned int	compute_window_height(unsigned int window_width,

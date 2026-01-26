@@ -6,16 +6,11 @@
 /*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
 /*                                                    +#+                     */
 /*   Created: 2025/12/08 18:08:22 by makurek        #+#    #+#                */
-/*   Updated: 2025/12/18 12:16:52 by makurek        ########   odam.nl        */
+/*   Updated: 2026/01/26 15:58:08 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-/*
-static void	zoom()
-{
-}
-*/
 
 int	mouse_hook(int button, int x, int y, t_window *window)
 {
@@ -23,13 +18,6 @@ int	mouse_hook(int button, int x, int y, t_window *window)
 	(void)x;
 	(void)y;
 	(void)window;
-/*	if (button == 4)
-		zoom();
-	else if (button == 5)
-		zoom();
-	else
-		return (SUCCESS);
-*/	//render
 	return (SUCCESS);
 }
 

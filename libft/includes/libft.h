@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   libft.h                                             :+:    :+:           */
 /*                                                    +:+ +:+         +:+     */
 /*   By: makurek <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:23:28 by makurek           #+#    #+#             */
-/*   Updated: 2025/09/26 16:43:59 by makurek          ###   ####lausanne.ch   */
+/*   Updated: 2026/01/26 15:47:48 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ size_t	ft_strlen(const char *s);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strncpy(char *dst, const char *src, size_t n);
-char    *ft_strndup(const char *src, size_t n);
-size_t  ft_strnlen(const char *s, size_t maxlen);
+char	*ft_strndup(const char *src, size_t n);
+size_t	ft_strnlen(const char *s, size_t maxlen);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 char	*ft_strrchr(const char *s, int c);
 int		ft_strspn(const char *s, const char *accept);

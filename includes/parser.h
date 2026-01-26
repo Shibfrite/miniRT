@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   parser.h                                            :+:    :+:           */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 10:00:00 by anpayot           #+#    #+#             */
-/*   Updated: 2026/01/26 14:25:26 by anpayot          ###   ########.fr       */
+/*   Updated: 2026/01/26 15:52:20 by makurek        ########   odam.nl        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,13 @@ int			parse_cylinder(t_scene *scene, char **tokens);
 //-------------Parsing helpers-------------
 typedef struct s_double_parse
 {
-	int		idx;
-	int		sign;
+	int			idx;
+	int			sign;
 	long		int_part;
 	double		frac_part;
 	double		divisor;
-	int		digits;
-} 				t_double_parse;
+	int			digits;
+}	t_double_parse;
 
 typedef struct s_cylinder_parse
 {
@@ -80,7 +80,7 @@ typedef struct s_cylinder_parse
 	t_vec3		axis;
 	t_color3	color;
 	double		dims[2];
-} 				t_cylinder_parse;
+}	t_cylinder_parse;
 
 int			parse_double_token(const char *s, double *out);
 int			parse_int_range(const char *s, int min, int max, int *out);
