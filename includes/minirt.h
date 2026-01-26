@@ -1,83 +1,84 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                         ::::::::           */
-/*   minirt.h                                            :+:    :+:           */
-/*                                                      +:+                   */
-/*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
-/*                                                    +#+                     */
-/*   Created: 2026/01/05 18:07:53 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/22 13:45:30 by makurek        ########   odam.nl        */
+/*                                                        :::      ::::::::   */
+/*   minirt.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 18:07:53 by makurek           #+#    #+#             */
+/*   Updated: 2026/01/26 16:03:47 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //-------------Header-protection-------------
-#pragma once
+#ifndef MINIRT_H
+# define MINIRT_H
 
 //-------------Includes-------------
-#include <stdio.h>
+# include <stdio.h>
 //perror, printf
 
-#include <math.h>
+# include <math.h>
 //sqrt
 
-#include <fcntl.h>
+# include <fcntl.h>
 //open
 
-#include <stdlib.h>
+# include <stdlib.h>
 //malloc, free, exit
 
-#include <unistd.h>
+# include <unistd.h>
 //close, read, write
 
-#include <string.h>
+# include <string.h>
 //strerror
 
-#include <sys/time.h>
+# include <sys/time.h>
 //gettimeofday
 
-#include "libft.h"
+# include "libft.h"
 //not yet used
 
 // mlx functions (optional)
 // Define USE_MINILIBX when building the full graphical program so the
 // real MiniLibX headers are included. For parsing-only builds this
 // header may be omitted to avoid requiring the library at compile time.
-#ifdef USE_MINILIBX
-# include "mlx.h"
-# include <X11/X.h>
-# include <X11/Xlib.h>
-#endif
+# ifdef USE_MINILIBX
+#  include "mlx.h"
+#  include <X11/X.h>
+#  include <X11/Xlib.h>
+# endif
 
 //vec3 functions
-#include "vec3.h"
+# include "vec3.h"
 
 //bool values
-#include "stdbool.h"
+# include "stdbool.h"
 
 //-------------Defines-------------
 //Return values
-#define SUCCESS 0
-#define FAILURE 1
+# define SUCCESS 0
+# define FAILURE 1
 
 // single-keycode definition (use Linux value by default)
-#define KEY_ESCAPE 65307
+# define KEY_ESCAPE 65307
 
 //Window settings
-#define WIN_WIDTH 500
+# define WIN_WIDTH 500
 // 16:9
-#define WIN_ASPECT_RATIO 1.777f
-#define WIN_NAME "miniRT"
+# define WIN_ASPECT_RATIO 1.777f
+# define WIN_NAME "miniRT"
 
 //Camera settings
 //default values
-#define FOCAL_LENGTH 1
+# define FOCAL_LENGTH 1
 //Indexes of dimensional arrays
-#define WIDTH 0
-#define HEIGHT 1
+# define WIDTH 0
+# define HEIGHT 1
 
 //Quality of render
-#define MAX_DEPTH 10
-#define SAMPLES_PER_PIXEL 10
+# define MAX_DEPTH 10
+# define SAMPLES_PER_PIXEL 10
 
 //-------------Structures-------------
 //Contains window data for the mlx
@@ -207,8 +208,8 @@ typedef struct s_world
 }	t_world;
 
 //Scene structure for parsing
-#define MAX_OBJECTS 128
-#define MAX_LIGHTS 16
+# define MAX_OBJECTS 128
+# define MAX_LIGHTS 16
 
 typedef struct s_camera_spec
 {
@@ -296,3 +297,5 @@ double		degrees_to_radians(double d);
 double		random_double(void);
 double		random_double_range(double min, double max);
 t_vec3		project_on_axis(t_vec3 v, t_vec3 axis);
+
+#endif

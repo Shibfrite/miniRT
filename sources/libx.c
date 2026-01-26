@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                         ::::::::           */
-/*   libx.c                                              :+:    :+:           */
-/*                                                      +:+                   */
-/*   By: makurek <makurek@student.42lausanne.ch>       +#+                    */
-/*                                                    +#+                     */
-/*   Created: 2025/12/08 18:08:46 by makurek        #+#    #+#                */
-/*   Updated: 2026/01/26 15:57:16 by makurek        ########   odam.nl        */
+/*                                                        :::      ::::::::   */
+/*   libx.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/08 18:08:46 by makurek           #+#    #+#             */
+/*   Updated: 2026/01/26 16:06:37 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ int	close_program(void *param)
 		mlx_destroy_window(window->mlx_ptr, window->win_ptr);
 	}
 	if (window->mlx_ptr)
+	{
 		mlx_destroy_display(window->mlx_ptr);
+		free(window->mlx_ptr);
+	}
 	free(window);
 	return (SUCCESS);
 }
