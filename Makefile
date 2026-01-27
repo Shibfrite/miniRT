@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                            :+:    :+:            #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: makurek <makurek@student.42.fr>            +#+  +:+       +#+         #
+#    By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 22:14:00 by makurek           #+#    #+#              #
-#    Updated: 2026/01/12 11:13:21 by makurek        ########   odam.nl         #
+#    Updated: 2026/01/27 13:00:54 by anpayot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,5 +78,13 @@ fclean:	clean
 
 re:	fclean all 
 
+# Quick valgrind test with reduced resolution
+# Usage: make valgrind SCENE=scenes/your_scene.rt
+SCENE ?= scenes/basic_sphere.rt
+valgrind: $(LIBFT) CMLX
+	$(RM) $(NAME)
+	$(CC) $(CFLAGS) -DWIN_WIDTH=100 $(INC) $(SRC) $(LIBFT) $(MLX) -o $(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) $(SCENE)
+
 .SILENT:
-.PHONY: all clean fclean test re
+.PHONY: all clean fclean test re valgrind

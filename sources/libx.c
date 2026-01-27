@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 18:08:46 by makurek           #+#    #+#             */
-/*   Updated: 2026/01/26 16:06:37 by anpayot          ###   ########.fr       */
+/*   Updated: 2026/01/27 15:23:20 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,5 @@ int	close_program(void *param)
 		free(window->mlx_ptr);
 	}
 	free(window);
-	return (SUCCESS);
+	exit(EXIT_SUCCESS);
 }

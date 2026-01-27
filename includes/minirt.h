@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 18:07:53 by makurek           #+#    #+#             */
-/*   Updated: 2026/01/26 17:13:16 by anpayot          ###   ########.fr       */
+/*   Updated: 2026/01/27 15:25:24 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,9 @@
 # define KEY_ESCAPE 65307
 
 //Window settings
-# define WIN_WIDTH 500
+# ifndef WIN_WIDTH
+#  define WIN_WIDTH 500
+# endif
 // 16:9
 # define WIN_ASPECT_RATIO 1.777f
 # define WIN_NAME "miniRT"
