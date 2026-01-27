@@ -1,5 +1,0 @@
-parse_line.c / diff
-parse_numbers.c
-!!! parse_utiles, fonction, brightess qui est void.
-parser.c a verifier
-
