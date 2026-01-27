@@ -1,0 +1,8 @@
+# Camera test: Z axis
+# Camera on Z axis at (0, 0, -100), pointed towards origin {0, 0, 0}
+A 0.001 255,255,255
+C 0,0,-10 0,0,1 70
+L 5,5,-5 0.6 255,255,255
+
+sp 0,0,0 2 255,0,0
+pl 0,-2.5,0 0,1,0 128,128,128
