@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
+#    Makefile                                            :+:    :+:            #
 #                                                     +:+ +:+         +:+      #
 #    By: anpayot <anpayot@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 22:14:00 by makurek           #+#    #+#              #
-#    Updated: 2026/01/27 13:00:54 by anpayot          ###   ########.fr        #
+#    Updated: 2026/01/27 15:47:22 by makurek        ########   odam.nl         #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,13 +51,11 @@ all: $(NAME)
 	echo "Done!"
 	#explain usage?
 
-CMLX:
-	echo "Compiling MLX..."
-	$(MAKE) $(MLX_DIR)
-	echo "MLX compiled successfully."
-
-$(NAME): $(OBJ) $(LIBFT) CMLX
+$(NAME): $(OBJ) $(LIBFT) | $(MLX_DIR)/libmlx.a
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(MLX) -o $@
+
+$(MLX_DIR)/libmlx.a:
+	$(MAKE) $(MLX_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIRS)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
@@ -75,6 +73,7 @@ clean:
 fclean:	clean
 	$(RM) $(NAME)
 	$(MAKE) $(LIBFT_DIR) fclean
+	$(MAKE) $(MLX_DIR) clean
 
 re:	fclean all 
 
